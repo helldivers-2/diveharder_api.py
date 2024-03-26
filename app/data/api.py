@@ -94,7 +94,7 @@ class API:
                 "newsFeed": self.news_feed_response,
                 "warId": self.warid_response,
                 "timeSinceStart": self.timesincestart_response,
-                "newsticker": self.news_ticker_response,
+                "newsTicker": self.news_ticker_response,
                 "galacticWarEffects": self.galactic_war_effects_response,
                 "levelSpec": self.levelspec_response,
                 "items": self.items_api_response,
