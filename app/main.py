@@ -7,7 +7,22 @@ from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 import app.data.api as apiv1
 import asyncio
+
+# Model Import
+from typing import List
 from app.models.arrowhead.warStatus import WarStatus
+from app.models.arrowhead.warInfo import WarInfo
+from app.models.arrowhead.warSummary import WarSummary
+from app.models.arrowhead.warId import WarID
+from app.models.arrowhead.newsFeed import NewsFeedItem
+from app.models.arrowhead.assignment import Assignment
+from app.models.arrowhead.timeSinceStart import TimeSinceStart
+from app.models.arrowhead.levelspec import Level
+from app.models.arrowhead.newsticker import NewsTicker
+from app.models.arrowhead.galacticWarEffects import GalacticWarEffect
+from app.models.arrowhead.missionrewards import MissionRewards
+from app.models.arrowhead.item import Item
+from app.models.arrowhead.all import AllRaw
 
 description = """
 Python FastAPI proxy server for the Helldivers 2 API.
@@ -84,62 +99,62 @@ def get_raw_status() -> WarStatus:
 
 
 @router.get("/raw/warinfo", status_code=200)
-def get_raw_warinfo():
+def get_raw_warinfo() -> WarInfo:
     return api_v1.warinfo_response
 
 
 @router.get("/raw/planetstats", status_code=200)
-def get_raw_planetstats():
+def get_raw_planetstats() -> WarSummary:
     return api_v1.planet_stats_response
 
 
 @router.get("/raw/newsticker", status_code=200)
-def get_raw_newsticker():
+def get_raw_newsticker() -> NewsTicker:
     return api_v1.news_ticker_response
 
 
 @router.get("/raw/newsfeed", status_code=200)
-def get_raw_newsfeed():
+def get_raw_newsfeed() -> List[NewsFeedItem]:
     return api_v1.news_feed_response
 
 
 @router.get("/raw/timesincestart", status_code=200)
-def get_raw_timesincestart():
+def get_raw_timesincestart() -> TimeSinceStart:
     return api_v1.timesincestart_response
 
 
 @router.get("/raw/warid", status_code=200)
-def get_raw_warid():
+def get_raw_warid() -> WarID:
     return api_v1.warid_response
 
 
 @router.get("/raw/galacticwareffects", status_code=200)
-def get_raw_galacticwareffects():
+def get_raw_galacticwareffects() -> List[GalacticWarEffect]:
     return api_v1.galactic_war_effects_response
 
 
 @router.get("/raw/levelspec", status_code=200)
-def get_raw_levelspec():
+def get_raw_levelspec() -> List[Level]:
     return api_v1.levelspec_response
 
 
 @router.get("/raw/items", status_code=200)
-def get_raw_items():
+def get_raw_items() -> List[Item]:
     return api_v1.items_api_response
 
 
 @router.get("/raw/missionrewards", status_code=200)
-def get_raw_missionrewards():
+def get_raw_missionrewards() -> MissionRewards:
     return api_v1.mission_reward_response
 
 
 @router.get("/raw/majororder", status_code=200)
-def get_raw_majororder():
+def get_raw_majororder() -> List[Assignment]:
     return api_v1.major_order_response
 
 
 @router.get("/raw/all", status_code=200)
-def get_all_raw():
+def get_all_raw() -> AllRaw:
     """
     All AHGS API Calls Only
     """
