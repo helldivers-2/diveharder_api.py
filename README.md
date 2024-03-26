@@ -1,9 +1,3 @@
- 
-![pipeline status](https://gitlab.com/helldivers-2/hd2-community-api/badges/main/pipeline.svg)![coverage](https://gitlab.com/helldivers-2/hd2-community-api/badges/main/coverage.svg?job=test&min_coverage=90)
-
-![HD2 Community API](https://i.imgur.com/I1wosdV.png){width=50%}
-
-
 A proxy API providing endpoints to access Helldivers 2 API data, both RAW API Data and Formatted API Data.
 <br />
 
@@ -104,8 +98,8 @@ SOFTWARE.
 <summary>Acknowledgements</summary>
 
 Language | API | Database | Linter<br>
-![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
-![Postgres](https://img.shields.io/badge/postgres-%23316192.svg?style=for-the-badge&logo=postgresql&logoColor=white)<br>
+[![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)](https://www.python.org/)
+[![Postgres](https://img.shields.io/badge/postgres-%23316192.svg?style=for-the-badge&logo=postgresql&logoColor=white)](https://www.postgresql.org/)<br>
 [![FastAPI](https://img.shields.io/badge/FastAPI-005571?style=for-the-badge&logo=fastapi)](https://fastapi.tiangolo.com/)[![Python Black](https://img.shields.io/badge/Python%20Black-000000?style=for-the-badge&logo=python&logoColor=FFFFFF&labelColor=000000&color=000000)](https://github.com/psf/black)
 <br><br>Chat's Dev Environment:<br>
 ![Visual Studio Code](https://img.shields.io/badge/Visual%20Studio%20Code-0078d7.svg?style=for-the-badge&logo=visual-studio-code&logoColor=white) ![Windows](https://img.shields.io/badge/Windows-0078D6?style=for-the-badge&logo=windows&logoColor=white)<br>
