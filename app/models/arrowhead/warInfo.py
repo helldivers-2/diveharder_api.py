@@ -1,8 +1,26 @@
 from pydantic import BaseModel
 from typing import List
 
-from .info.homeWorld import HomeWorld
-from .info.planetInfo import PlanetInfo
+
+class PlanetCoordinates(BaseModel):
+    x: float
+    y: float
+
+
+class PlanetInfo(BaseModel):
+    index: int
+    settingsHash: int
+    position: PlanetCoordinates
+    waypoints: List[int]
+    sector: int
+    maxHealth: int
+    disabled: bool
+    initialOwner: int
+
+
+class HomeWorld(BaseModel):
+    race: int
+    planetIndices: List[int]
 
 
 class WarInfo(BaseModel):
@@ -12,5 +30,5 @@ class WarInfo(BaseModel):
     minimumClientVersion: str
     planetInfos: List[PlanetInfo]
     homeWorlds: List[HomeWorld]
-    # TODO: Capitals
-    # TODO: planetPermEffectsgit her
+    capitalInfos: list
+    planetPermanentEffects: list
