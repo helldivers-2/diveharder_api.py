@@ -1,3 +1,5 @@
+![HD2 Community API](https://i.imgur.com/I1wosdV.png){width=50%}
+
 A proxy API providing endpoints to access Helldivers 2 API data, both RAW API Data and Formatted API Data.
 <br />
 
