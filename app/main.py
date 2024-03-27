@@ -1,12 +1,11 @@
 from contextlib import asynccontextmanager
-from time import gmtime, strftime
+from time import gmtime, strftime, sleep
 import os
 from fastapi import APIRouter, FastAPI
 from fastapi.requests import Request
 from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 import app.data.api as apiv1
-import asyncio
 
 # Model Import
 from typing import List
@@ -36,6 +35,7 @@ async def update_data(isForce: bool = False):
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     await update_data(isForce=True)
+    sleep(4)
     yield
 
 
