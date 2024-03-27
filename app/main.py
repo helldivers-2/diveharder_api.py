@@ -29,15 +29,13 @@ Python FastAPI proxy server for the Helldivers 2 API.
 """
 
 
-async def update_data(isForce: bool = True, interval: int = 20):
-    while True:
-        await api_v1.update(force=isForce)
-        await asyncio.sleep(interval)
+async def update_data(isForce: bool = False):
+    await api_v1.update(force=isForce)
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    asyncio.create_task(update_data())
+    update_data(isForce=True)
     yield
 
 
@@ -74,7 +72,7 @@ def get_all():
     """
     All AHGS API plus Races, Planet Names, and Sectors
     """
-
+    update_data(isForce=False)
     return api_v1.all_responses
 
 
@@ -95,16 +93,19 @@ def get_sectors():
 
 @router.get("/raw/status", status_code=200)
 def get_raw_status() -> WarStatus:
+    update_data(isForce=False)
     return api_v1.status_response
 
 
 @router.get("/raw/warinfo", status_code=200)
 def get_raw_warinfo() -> WarInfo:
+    update_data(isForce=False)
     return api_v1.warinfo_response
 
 
 @router.get("/raw/planetstats", status_code=200)
 def get_raw_planetstats() -> WarSummary:
+    update_data(isForce=False)
     return api_v1.planet_stats_response
 
 
@@ -120,6 +121,7 @@ def get_raw_newsfeed() -> List[NewsFeedItem]:
 
 @router.get("/raw/timesincestart", status_code=200)
 def get_raw_timesincestart() -> TimeSinceStart:
+    update_data(isForce=False)
     return api_v1.timesincestart_response
 
 
@@ -150,6 +152,7 @@ def get_raw_missionrewards() -> MissionRewards:
 
 @router.get("/raw/majororder", status_code=200)
 def get_raw_majororder() -> List[Assignment]:
+    update_data(isForce=False)
     return api_v1.major_order_response
 
 
@@ -158,7 +161,7 @@ def get_all_raw() -> AllRaw:
     """
     All AHGS API Calls Only
     """
-
+    update_data(isForce=False)
     return api_v1.all_raw_responses
 
 
