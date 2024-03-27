@@ -35,7 +35,7 @@ async def update_data(isForce: bool = False):
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    update_data(isForce=True)
+    await update_data(isForce=True)
     yield
 
 
@@ -55,7 +55,7 @@ router = APIRouter()
 
 
 @router.get("/", status_code=200)
-def root():
+async def root():
     """Root Get"""
     return {
         "greeting": "Liberty's Greetings, Helldiver!",
@@ -68,100 +68,100 @@ def root():
 
 
 @router.get("/all", status_code=200)
-def get_all():
+async def get_all():
     """
     All AHGS API plus Races, Planet Names, and Sectors
     """
-    update_data(isForce=False)
+    await update_data(isForce=False)
     return api_v1.all_responses
 
 
 @router.get("/races", status_code=200)
-def get_races():
+async def get_races():
     return api_v1.races
 
 
 @router.get("/planetnames", status_code=200)
-def get_planet_names():
+async def get_planet_names():
     return api_v1.planet_names
 
 
 @router.get("/sectors", status_code=200)
-def get_sectors():
+async def get_sectors():
     return api_v1.sectors
 
 
 @router.get("/raw/status", status_code=200)
-def get_raw_status() -> WarStatus:
-    update_data(isForce=False)
+async def get_raw_status() -> WarStatus:
+    await update_data(isForce=False)
     return api_v1.status_response
 
 
 @router.get("/raw/warinfo", status_code=200)
-def get_raw_warinfo() -> WarInfo:
-    update_data(isForce=False)
+async def get_raw_warinfo() -> WarInfo:
+    await update_data(isForce=False)
     return api_v1.warinfo_response
 
 
 @router.get("/raw/planetstats", status_code=200)
-def get_raw_planetstats() -> WarSummary:
-    update_data(isForce=False)
+async def get_raw_planetstats() -> WarSummary:
+    await update_data(isForce=False)
     return api_v1.planet_stats_response
 
 
 @router.get("/raw/newsticker", status_code=200)
-def get_raw_newsticker() -> NewsTicker:
+async def get_raw_newsticker() -> NewsTicker:
     return api_v1.news_ticker_response
 
 
 @router.get("/raw/newsfeed", status_code=200)
-def get_raw_newsfeed() -> List[NewsFeedItem]:
+async def get_raw_newsfeed() -> List[NewsFeedItem]:
     return api_v1.news_feed_response
 
 
 @router.get("/raw/timesincestart", status_code=200)
-def get_raw_timesincestart() -> TimeSinceStart:
-    update_data(isForce=False)
+async def get_raw_timesincestart() -> TimeSinceStart:
+    await update_data(isForce=False)
     return api_v1.timesincestart_response
 
 
 @router.get("/raw/warid", status_code=200)
-def get_raw_warid() -> WarID:
+async def get_raw_warid() -> WarID:
     return api_v1.warid_response
 
 
 @router.get("/raw/galacticwareffects", status_code=200)
-def get_raw_galacticwareffects() -> List[GalacticWarEffect]:
+async def get_raw_galacticwareffects() -> List[GalacticWarEffect]:
     return api_v1.galactic_war_effects_response
 
 
 @router.get("/raw/levelspec", status_code=200)
-def get_raw_levelspec() -> List[Level]:
+async def get_raw_levelspec() -> List[Level]:
     return api_v1.levelspec_response
 
 
 @router.get("/raw/items", status_code=200)
-def get_raw_items() -> List[Item]:
+async def get_raw_items() -> List[Item]:
     return api_v1.items_api_response
 
 
 @router.get("/raw/missionrewards", status_code=200)
-def get_raw_missionrewards() -> MissionRewards:
+async def get_raw_missionrewards() -> MissionRewards:
     return api_v1.mission_reward_response
 
 
 @router.get("/raw/majororder", status_code=200)
-def get_raw_majororder() -> List[Assignment]:
-    update_data(isForce=False)
+async def get_raw_majororder() -> List[Assignment]:
+    await update_data(isForce=False)
     return api_v1.major_order_response
 
 
 @router.get("/raw/all", status_code=200)
-def get_all_raw() -> AllRaw:
+async def get_all_raw() -> AllRaw:
     """
     All AHGS API Calls Only
     """
-    update_data(isForce=False)
+    await update_data(isForce=False)
     return api_v1.all_raw_responses
 
 
