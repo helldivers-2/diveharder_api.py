@@ -1,5 +1,5 @@
 from copy import deepcopy
-from time import time
+from time import time, sleep
 
 import grequests
 
@@ -119,7 +119,7 @@ class API:
             grequests.get(BASE_URL + url, headers=REQUEST_HEADERS) for url in urls
         )
         response_list = grequests.map(url_requests)
-
+        sleep(5)
         self.status_response = response_list[0].json()
         self.warinfo_response = response_list[1].json()
         self.planet_stats_response = response_list[2].json()
