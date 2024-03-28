@@ -3,8 +3,8 @@ from time import time, sleep
 
 import grequests
 
-import app.cfg.constants as constants
-import app.cfg.settings as settings
+import diveharder.data.cfg.constants as constants
+import diveharder.data.cfg.settings as settings
 
 BASE_URL = settings.api["BASE_URL"]
 TIME_DELAY = int(settings.api["TIME_DELAY"])
