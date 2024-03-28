@@ -17,11 +17,13 @@ from app.models.arrowhead.newsFeed import NewsFeedItem
 from app.models.arrowhead.assignment import Assignment
 from app.models.arrowhead.timeSinceStart import TimeSinceStart
 from app.models.arrowhead.levelspec import Level
+from app.models.arrowhead.leaderboard import Leaderboard, Error
 from app.models.arrowhead.newsticker import NewsTicker
 from app.models.arrowhead.galacticWarEffects import GalacticWarEffect
 from app.models.arrowhead.missionrewards import MissionRewards
 from app.models.arrowhead.item import Item
 from app.models.arrowhead.all import AllRaw
+
 
 description = """
 Python FastAPI proxy server for the Helldivers 2 API.
@@ -138,6 +140,14 @@ async def get_raw_galacticwareffects() -> List[GalacticWarEffect]:
 @router.get("/raw/levelspec", status_code=200)
 async def get_raw_levelspec() -> List[Level]:
     return api_v1.levelspec_response
+
+
+@router.get("/raw/leaderboard", status_code=200)
+async def get_raw_leaderboard() -> Leaderboard | Error:
+    """
+    This may or may not break... There's a lot of bugs with this on AHGS' side.
+    """
+    return api_v1.leaderboard_response
 
 
 @router.get("/raw/items", status_code=200)

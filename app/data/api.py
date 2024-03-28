@@ -25,6 +25,7 @@ urls = [
     settings.api["ITEMS_API_URL"],
     settings.api["MISSION_REWARD_API_URL"],
     settings.api["MAJOR_ORDER_API_URL"],
+    settings.api["HOTF_LEADERBOARD_API_URL"],
 ]
 # Fuck this one in particular - HOTF_LEADERBOARD_API_URL = settings.api[""]
 
@@ -41,6 +42,7 @@ class API:
         self.warid_response = []
         self.galactic_war_effects_response = []
         self.levelspec_response = []
+        self.leaderboard_response = []
         self.items_api_response = []
         self.mission_reward_response = []
         self.major_order_response = []
@@ -54,6 +56,7 @@ class API:
         self.last_warid_response = []
         self.last_galactic_war_effects_response = []
         self.last_levelspec_response = []
+        self.last_leaderboard_response = []
         self.last_items_api_response = []
         self.last_mission_reward_response = []
         self.last_major_order_response = []
@@ -131,6 +134,7 @@ class API:
         self.items_api_response = response_list[9].json()
         self.mission_reward_response = response_list[10].json()
         self.major_order_response = response_list[11].json()
+        self.leaderboard_response = response_list[12].json()
 
         return True
 
@@ -170,6 +174,9 @@ class API:
             )
             self.last_levelspec_response = (
                 deepcopy(self.levelspec_response) if self.levelspec_response else []
+            )
+            self.last_leaderboard_response = (
+                deepcopy(self.leaderboard_response) if self.leaderboard_response else []
             )
             self.last_items_api_response = (
                 deepcopy(self.items_api_response) if self.items_api_response else []
@@ -225,6 +232,11 @@ class API:
             self.last_levelspec_response = (
                 deepcopy(self.levelspec_response)
                 if not self.last_levelspec_response
+                else []
+            )
+            self.last_leaderboard_response = (
+                deepcopy(self.leaderboard_response)
+                if not self.last_leaderboard_response
                 else []
             )
             self.last_items_api_response = (
