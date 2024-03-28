@@ -1,5 +1,5 @@
 ARG PYVERSION=3.12.2
-FROM python:${PYVERSION}
+FROM python:${PYVERSION}-alpine
 
 EXPOSE 1234
 

@@ -1,5 +1,5 @@
 # flyctl launch added from .gitignore
-**\venv
+**\.venv
 **\.vscode
 **\__pycache__
 **\.gitlab-ci.yml
