@@ -5,7 +5,7 @@ if os.path.isfile("./.env"):
     load_dotenv()
 
 api = {
-    "BASE_URL ": os.environ["BASE_URL"],
+    "BASE_URL": os.environ["BASE_URL"],
     "TIME_DELAY": os.environ["TIME_DELAY"],
     "TIMEOUT": os.environ["TIMEOUT"],
     "STATUS_API_URL": os.environ["STATUS_API_URL"],
