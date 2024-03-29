@@ -14,7 +14,7 @@ from fastapi.middleware.cors import CORSMiddleware
 import diveharder.data.api as api
 
 # DATA MODEL IMPORTS
-from diveharder.models.arrowhead.arrowhead_imports import *
+from diveharder.models.arrowhead.imports import *
 
 description = """
 Python FastAPI proxy server for the Helldivers 2 API.
