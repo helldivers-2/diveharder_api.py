@@ -12,6 +12,7 @@ from .levelspec import Level
 from .newsticker import NewsTicker
 from .galacticWarEffects import GalacticWarEffect
 from .missionrewards import MissionRewards
+from .leaderboard import Leaderboard, Error
 from .item import Item
 
 
@@ -28,3 +29,4 @@ class AllRaw(BaseModel):
     levelSpec: List[Level]
     items: List[Item]
     missionRewards: MissionRewards
+    leaderboard: Leaderboard | Error

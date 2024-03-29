@@ -102,6 +102,7 @@ class API:
                 "levelSpec": self.levelspec_response,
                 "items": self.items_api_response,
                 "missionRewards": self.mission_reward_response,
+                "leaderboard": self.leaderboard_response,
             }
 
             custom_all = {
