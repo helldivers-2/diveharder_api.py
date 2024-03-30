@@ -3,12 +3,11 @@
 **\.vscode
 **\__pycache__
 **\.gitlab-ci.yml
-!**\template.env
 **\app\secrets\*
-!**\app\secrets\put_secrets_here
 **\app\gsheet_service.py
 **\coverage.xml
 **\.coverage
+**\test
 
 # flyctl launch added from .venv\.gitignore
 .venv\**\*
