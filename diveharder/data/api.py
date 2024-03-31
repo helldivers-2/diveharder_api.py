@@ -1,5 +1,6 @@
 from copy import deepcopy
-from time import time, sleep
+from time import time, strftime, localtime
+from re import sub
 
 import grequests
 
@@ -26,6 +27,7 @@ urls = [
     settings.api["MISSION_REWARD_API_URL"],
     settings.api["MAJOR_ORDER_API_URL"],
     settings.api["HOTF_LEADERBOARD_API_URL"],
+    settings.api["STEAM_NEWS_API_URL"],
 ]
 # Fuck this one in particular - HOTF_LEADERBOARD_API_URL = settings.api[""]
 
@@ -46,6 +48,7 @@ class API:
         self.items_api_response = []
         self.mission_reward_response = []
         self.major_order_response = []
+        self.steam_news_response = []
 
         self.last_status_response = []
         self.last_warinfo_response = []
@@ -60,6 +63,7 @@ class API:
         self.last_items_api_response = []
         self.last_mission_reward_response = []
         self.last_major_order_response = []
+        self.last_steam_news_response = []
 
         self.all_raw_responses = {}
         self.all_responses = {}
@@ -87,8 +91,10 @@ class API:
             print("--- API | Update | Caching Start ---")
             await self.cache(initial=False)
             print("--- API | Update | Sending Requests ---")
-            await self.send_requests()
+            response = await self.send_requests()
             print("--- API | Update | Requests Recieved ---")
+            print("--- API | Update | Assigning Responses ---")
+            await self.assign_responses(response)
             self.all_raw_responses = {
                 "status": self.status_response,
                 "warinfo": self.warinfo_response,
@@ -104,7 +110,7 @@ class API:
                 "missionRewards": self.mission_reward_response,
                 "leaderboard": self.leaderboard_response,
             }
-
+            print("--- API | Update | Assigned Responses ---")
             custom_all = {
                 "races": self.races,
                 "planetNames": self.planet_names,
@@ -120,9 +126,18 @@ class API:
 
     async def send_requests(self):
         url_requests = (
-            grequests.get(BASE_URL + url, headers=REQUEST_HEADERS) for url in urls
+            (
+                grequests.get(url, headers=REQUEST_HEADERS)
+                if url.startswith("https://")
+                else grequests.get(BASE_URL + url, headers=REQUEST_HEADERS)
+            )
+            for url in urls
         )
         response_list = grequests.map(url_requests)
+
+        return response_list
+
+    async def assign_responses(self, response_list):
         self.status_response = response_list[0].json()
         self.warinfo_response = response_list[1].json()
         self.planet_stats_response = response_list[2].json()
@@ -136,6 +151,42 @@ class API:
         self.mission_reward_response = response_list[10].json()
         self.major_order_response = response_list[11].json()
         self.leaderboard_response = response_list[12].json()
+        self.steam_news_response = response_list[13].json()["appnews"]["newsitems"]
+        pops = [
+            "gid",
+            "is_external_url",
+            "feedname",
+            "feedlabel",
+            "feed_type",
+            "tags",
+            "appid",
+            "author",
+        ]
+        for news in self.steam_news_response:
+            for popper in pops:
+                if popper in news:
+                    news.pop(popper)
+            news["date"] = strftime("%d-%b-%Y %H:%M", localtime(news["date"]))
+            news["contents"] = sub(r"\[img\](.*?)\[/img\]", "", news["contents"])
+            news["contents"] = sub(
+                r"\[previewyoutube=(.*?);full\]\[/previewyoutube\]",
+                "",
+                news["contents"],
+            )
+            news["contents"] = sub(r"\[h2\](.*?)\[/h2\]", "", news["contents"])
+            news["contents"] = sub(r"\[b\](.*?)\[/b\]", "", news["contents"])
+            news["contents"] = sub(r"\[list\]", "", news["contents"])
+            news["contents"] = sub(r"\[/list\]", "", news["contents"])
+            news["contents"] = sub(r"\[\*\]", "", news["contents"])
+            news["contents"] = sub(r"\[i\](.*?)\[/i\]", "", news["contents"])
+            news["contents"] = sub(r"\n\n", "", news["contents"])
+            news["contents"] = sub(r"\n\n", "", news["contents"])
+            news["contents"] = sub(r"\n\n", "", news["contents"])
+            news["contents"] = sub(r"  ", " ", news["contents"])
+            news["contents"] = sub(r"  ", " ", news["contents"])
+            news["contents"] = sub(r"  ", " ", news["contents"])
+            news["contents"] = sub(r"  ", " ", news["contents"])
+            news["contents"] = sub(r" . ", ". ", news["contents"])
 
         return True
 
@@ -189,6 +240,9 @@ class API:
             )
             self.last_major_order_response = (
                 deepcopy(self.major_order_response) if self.major_order_response else []
+            )
+            self.last_steam_news_response = (
+                deepcopy(self.steam_news_response) if self.steam_news_response else []
             )
 
         elif initial and not self.last_status_response:
@@ -253,6 +307,11 @@ class API:
             self.last_major_order_response = (
                 deepcopy(self.major_order_response)
                 if not self.last_major_order_response
+                else []
+            )
+            self.last_steam_news_response = (
+                deepcopy(self.steam_news_response)
+                if not self.last_steam_news_response
                 else []
             )
         else:

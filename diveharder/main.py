@@ -155,6 +155,12 @@ async def get_raw_majororder() -> List[Assignment]:
     return api_handler.major_order_response
 
 
+@router.get("/raw/updates", status_code=200)
+async def get_steam_news():
+    await update_data(isForce=False)
+    return api_handler.steam_news_response
+
+
 @router.get("/raw/all", status_code=200)
 async def get_all_raw() -> AllRaw:
     """
