@@ -1,3 +1,6 @@
 [submodule "json"]
 	path = json
 	url = https://github.com/chatterchats/json.git
+[submodule "private_env"]
+	path = private_env
+	url = https://github.com/chatterchats/private_env
