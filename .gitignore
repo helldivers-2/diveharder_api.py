@@ -11,5 +11,4 @@ coverage.xml
 .env
 fly.toml
 .gitmodules
-./json/
-json
+
