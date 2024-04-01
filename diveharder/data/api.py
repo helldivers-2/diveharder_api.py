@@ -4,6 +4,7 @@ from re import sub
 
 import grequests
 
+from diveharder.utils.logging import logger, log, debug
 import diveharder.data.cfg.constants as constants
 import diveharder.data.cfg.settings as settings
 
@@ -29,7 +30,6 @@ urls = [
     settings.api["HOTF_LEADERBOARD_API_URL"],
     settings.api["STEAM_NEWS_API_URL"],
 ]
-# Fuck this one in particular - HOTF_LEADERBOARD_API_URL = settings.api[""]
 
 
 class API:
@@ -78,22 +78,16 @@ class API:
 
     def time_check(self):
         new_time = int(time())
-        print(f"--- API | Update | Time Since Update: {(new_time - self.update_time)}")
+        debug(f"API | Time Check | {(new_time - self.update_time)}s")
         return self.update_time <= new_time - TIME_DELAY
 
     async def update(self, force: bool = False):
-        print("--- API | Update | Check Time ---")
+        debug("API | Update")
         if self.time_check() or force:
-            print("--- API | Update | Out of Date ---")
-            print("--- API | Update | Updating ---")
             self.last_update_time = self.update_time
             self.update_time = int(time())
-            print("--- API | Update | Caching Start ---")
             await self.cache(initial=False)
-            print("--- API | Update | Sending Requests ---")
             response = await self.send_requests()
-            print("--- API | Update | Requests Recieved ---")
-            print("--- API | Update | Assigning Responses ---")
             await self.assign_responses(response)
             self.all_raw_responses = {
                 "status": self.status_response,
@@ -109,8 +103,8 @@ class API:
                 "items": self.items_api_response,
                 "missionRewards": self.mission_reward_response,
                 "leaderboard": self.leaderboard_response,
+                "updates": self.steam_news_response,
             }
-            print("--- API | Update | Assigned Responses ---")
             custom_all = {
                 "races": self.races,
                 "planetNames": self.planet_names,
@@ -118,13 +112,14 @@ class API:
             }
             self.all_responses = self.all_raw_responses | custom_all
 
-            print("--- API | Update | Caching Start ---")
+            debug("--- API | Update | Caching Start ---")
             await self.cache(initial=True)
-            print("--- API | Update | Done ---")
+            debug("--- API | Update | Done ---")
         else:
-            print("--- API | Update | Not Needed ---")
+            debug("--- API | Update | Not Needed ---")
 
     async def send_requests(self):
+        debug("API | Send Requests")
         url_requests = (
             (
                 grequests.get(url, headers=REQUEST_HEADERS)
@@ -138,6 +133,7 @@ class API:
         return response_list
 
     async def assign_responses(self, response_list):
+        debug("API | Assign Responses")
         self.status_response = response_list[0].json()
         self.warinfo_response = response_list[1].json()
         self.planet_stats_response = response_list[2].json()
@@ -173,15 +169,15 @@ class API:
                 "",
                 news["contents"],
             )
-            news["contents"] = sub(r"\[h2\](.*?)\[/h2\]", "", news["contents"])
-            news["contents"] = sub(r"\[b\](.*?)\[/b\]", "", news["contents"])
-            news["contents"] = sub(r"\[list\]", "", news["contents"])
-            news["contents"] = sub(r"\[/list\]", "", news["contents"])
-            news["contents"] = sub(r"\[\*\]", "", news["contents"])
-            news["contents"] = sub(r"\[i\](.*?)\[/i\]", "", news["contents"])
-            news["contents"] = sub(r"\n\n", "", news["contents"])
-            news["contents"] = sub(r"\n\n", "", news["contents"])
-            news["contents"] = sub(r"\n\n", "", news["contents"])
+            news["contents"] = sub(r"\[h2\](.*?)\[/h2\]", r"## \1", news["contents"])
+            news["contents"] = sub(r"\[b\](.*?)\[/b\]", r"**\1**", news["contents"])
+            news["contents"] = sub(r"\[list\]", r"\n", news["contents"])
+            news["contents"] = sub(r"\[/list\]", r"\n", news["contents"])
+            news["contents"] = sub(r"\[\*\]", "- ", news["contents"])
+            news["contents"] = sub(r"\[i\](.*?)\[/i\]", r"*\1*", news["contents"])
+            news["contents"] = sub(r"\n\n", r"\n", news["contents"])
+            news["contents"] = sub(r"\n\n", r"\n", news["contents"])
+            news["contents"] = sub(r"\n\n", r"\n", news["contents"])
             news["contents"] = sub(r"  ", " ", news["contents"])
             news["contents"] = sub(r"  ", " ", news["contents"])
             news["contents"] = sub(r"  ", " ", news["contents"])
@@ -191,9 +187,10 @@ class API:
         return True
 
     async def cache(self, initial: bool = False):
+        debug("API | Cache")
         if not initial and self.status_response:
             # Cache API data before fetching new data.
-            print("--- API | Update | Caching ---")
+            debug("--- API | Update | Caching ---")
             self.last_status_response = (
                 deepcopy(self.status_response) if self.status_response else []
             )
@@ -247,7 +244,7 @@ class API:
 
         elif initial and not self.last_status_response:
             # We only cache API data AFTER requests if this is the first run of this boot.
-            print("--- API | Update | Initial Cache  ---")
+            debug("--- API | Update | Initial Cache  ---")
             self.last_status_response = (
                 deepcopy(self.status_response) if not self.last_status_response else []
             )
@@ -315,7 +312,5 @@ class API:
                 else []
             )
         else:
-            print("--- API | Update | Cache Not Needed ---")
             return True
-        print("--- API | Update | Caching Done ---")
         return True

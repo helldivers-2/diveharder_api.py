@@ -14,6 +14,7 @@ from .galacticWarEffects import GalacticWarEffect
 from .missionrewards import MissionRewards
 from .leaderboard import Leaderboard, Error
 from .item import Item
+from ..steam.news import NewsItem
 
 
 class AllRaw(BaseModel):
@@ -30,3 +31,4 @@ class AllRaw(BaseModel):
     items: List[Item]
     missionRewards: MissionRewards
     leaderboard: Leaderboard | Error
+    updates: List[NewsItem]
