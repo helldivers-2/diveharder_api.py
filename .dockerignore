@@ -1,14 +1,19 @@
-# flyctl launch added from .gitignore
-**\.venv
-**\.vscode
-**\__pycache__
-**\.gitlab-ci.yml
-**\app\secrets\*
-**\app\gsheet_service.py
-**\coverage.xml
-**\.coverage
-**\test
+# env folders/files
+.venv
+venv
+.vscode
+__pycache__
+
+# Dev Folders/Files
+**/test/
+**/private_env/
 
 # flyctl launch added from .venv\.gitignore
-.venv\**\*
+.gitignore
+.gitmodules
 fly.toml
+LICENSE
+*.md
+*.log
+.git
+

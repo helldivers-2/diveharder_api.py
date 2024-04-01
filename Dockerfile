@@ -9,10 +9,10 @@ COPY ./requirements.txt /code/requirements.txt
 
 RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
 
-COPY ./.env /code/.env
-COPY ./json /code/json
+COPY ./ /code/
 
-COPY ./diveharder /code/diveharder
 
-CMD ["uvicorn", "diveharder.main:API", "--host", "0.0.0.0", "--port", "1234"]
+CMD ["gunicorn", "diveharder.main:API", "-w", "1", "-k", "uvicorn.workers.UvicornWorker", "--bind", "0.0.0.0:8080", "--log-syslog", "--log-level", "info"]
+     
+
 
