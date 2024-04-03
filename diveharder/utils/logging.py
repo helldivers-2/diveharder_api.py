@@ -25,6 +25,7 @@ logger.handlers = [stream_handler]
 # Set log-level
 logger.setLevel(logging.INFO)
 
+
 def update_log_level(logLevel: int):
     match logLevel:
         case 10:
@@ -34,11 +35,24 @@ def update_log_level(logLevel: int):
         case _:
             logger.setLevel(logging.INFO)
 
-def log(request: Request = None, status: status = None, message: str = None):
+
+def log(
+    request: Request = None,
+    status: status = None,
+    message: str = None,
+    user: str = "",
+):
+    source = request.headers.get("User-Agent", "")
+    if user:
+        source = user
+
     if request and status:
-        logger.info(msg=f"[{request.client.host}:{request.client.port}] [{request.method} {request.url.path}] [{status}] [{request.headers["User-Agent"]}]")
+        logger.info(
+            msg=f"[{request.client.host}:{request.client.port}] [{request.method} {request.url.path}] [{status}] [{source}]"
+        )
     elif message:
         logger.info(msg="[" + message + "]")
+
 
 def debug(message: str):
     logger.debug(msg="[" + message + "]")
