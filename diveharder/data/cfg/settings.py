@@ -4,6 +4,9 @@ from dotenv import load_dotenv
 if os.path.isfile("./.env"):
     load_dotenv()
 
+news_feed_max_entries = "?maxEntries=1024"
+steam_news_query_params = "?appid=553850&feeds=steam_community_announcements"
+
 api = {
     "BASE_URL": os.environ["BASE_URL"],
     "TIME_DELAY": os.environ["TIME_DELAY"],
@@ -11,7 +14,7 @@ api = {
     "STATUS_API_URL": os.environ["STATUS_API_URL"],
     "WARINFO_API_URL": os.environ["WARINFO_API_URL"],
     "NEWS_TICKER_API_URL": os.environ["NEWS_TICKER_API_URL"],
-    "NEWS_FEED_API_URL": os.environ["NEWS_FEED_API_URL"],
+    "NEWS_FEED_API_URL": os.environ["NEWS_FEED_API_URL"] + news_feed_max_entries,
     "TIMESINCESTART_API_URL": os.environ["TIMESINCESTART_API_URL"],
     "WARID_API_URL": os.environ["WARID_API_URL"],
     "GALACTICE_WAR_EFFECTS_API_URL": os.environ["GALACTICE_WAR_EFFECTS_API_URL"],
@@ -30,5 +33,5 @@ api = {
     "ELECTION_CANDIDATES_API_URL": os.environ["ELECTION_CANDIDATES_API_URL"],
     "ELECTION_TERMS_API_URL": os.environ["ELECTION_TERMS_API_URL"],
     "ELECTION_POLICIES_API_URL": os.environ["ELECTION_POLICIES_API_URL"],
-    "STEAM_NEWS_API_URL": os.environ["STEAM_NEWS_API_URL"],
+    "STEAM_NEWS_API_URL": os.environ["STEAM_NEWS_API_URL"] + steam_news_query_params,
 }
