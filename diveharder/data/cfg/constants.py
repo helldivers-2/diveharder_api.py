@@ -10,5 +10,8 @@ api = {
 planets = {
     "names": json.load(open("./json/planets.json")),
     "sectors": json.load(open("./json/sectors.json")),
-    "races": json.load(open("./json/factions.json")),
+}
+
+faction = {
+    "names": json.load(open("./json/factions.json")),
 }
