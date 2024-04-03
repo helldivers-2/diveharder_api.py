@@ -18,7 +18,7 @@ from diveharder.models.arrowhead.imports import *
 from diveharder.models.steam.news import NewsItem
 
 # LOGGER IMPORT
-from diveharder.utils.logging import logger, log, update_log_level
+from diveharder.utils.logging import logger, log, update_log_level, debug
 
 description = """
 Python FastAPI proxy server for the Helldivers 2 API.
@@ -50,9 +50,9 @@ router = APIRouter()
 
 
 @router.get("/", status_code=200)
-async def root(request: Request):
+async def root(request: Request, source: str = ""):
     """Root Get"""
-    log(request, status.HTTP_200_OK)
+    log(request, status.HTTP_200_OK, user=source)
     return {
         "greeting": "Liberty's Greetings, Helldiver!",
         "docs": "https://api.diveharder.com/docs",
@@ -77,14 +77,15 @@ async def update_logger(loggingLevel: int) -> None:
 
 
 @router.get("/all", status_code=200)
-async def get_all(request: Request):
+async def get_all(request: Request, source: str = ""):
     """
     All AHGS API plus Races, Planet Names, and Sectors
     """
     await update_data(isForce=False)
-    data = api_handler.all_responses
+    data = api_handler.all_data
     if data:
-        log(request, status.HTTP_200_OK)
+        source = request.headers.get("User-Agent", source)
+        log(request, status.HTTP_200_OK, user=source)
         return data
     else:
         log(request, status.HTTP_204_NO_CONTENT)
@@ -92,10 +93,11 @@ async def get_all(request: Request):
 
 
 @router.get("/races", status_code=200)
-async def get_races(request: Request):
+async def get_races(request: Request, source: str = ""):
     data = api_handler.races
     if data:
-        log(request, status.HTTP_200_OK)
+        source = request.headers.get("User-Agent", source)
+        log(request, status.HTTP_200_OK, user=source)
         return data
     else:
         log(request, status.HTTP_204_NO_CONTENT)
@@ -103,10 +105,11 @@ async def get_races(request: Request):
 
 
 @router.get("/planetnames", status_code=200)
-async def get_planet_names(request: Request):
+async def get_planet_names(request: Request, source: str = ""):
     data = api_handler.planet_names
     if data:
-        log(request, status.HTTP_200_OK)
+        source = request.headers.get("User-Agent", source)
+        log(request, status.HTTP_200_OK, user=source)
         return data
     else:
         log(request, status.HTTP_204_NO_CONTENT)
@@ -114,10 +117,11 @@ async def get_planet_names(request: Request):
 
 
 @router.get("/sectors", status_code=200)
-async def get_sectors(request: Request):
+async def get_sectors(request: Request, source: str = ""):
     data = api_handler.sectors
     if data:
-        log(request, status.HTTP_200_OK)
+        source = request.headers.get("User-Agent", source)
+        log(request, status.HTTP_200_OK, user=source)
         return data
     else:
         log(request, status.HTTP_204_NO_CONTENT)
@@ -125,11 +129,12 @@ async def get_sectors(request: Request):
 
 
 @router.get("/raw/status", status_code=200)
-async def get_raw_status(request: Request) -> WarStatus:
+async def get_raw_status(request: Request, source: str = "") -> WarStatus:
     await update_data(isForce=False)
-    data = api_handler.status_response
+    data = api_handler.raw_data["status"]
     if data:
-        log(request, status.HTTP_200_OK)
+        source = request.headers.get("User-Agent", source)
+        log(request, status.HTTP_200_OK, user=source)
         return data
     else:
         log(request, status.HTTP_204_NO_CONTENT)
@@ -137,11 +142,12 @@ async def get_raw_status(request: Request) -> WarStatus:
 
 
 @router.get("/raw/warinfo", status_code=200)
-async def get_raw_warinfo(request: Request) -> WarInfo:
+async def get_raw_warinfo(request: Request, source: str = "") -> WarInfo:
     await update_data(isForce=False)
-    data = api_handler.warinfo_response
+    data = api_handler.raw_data["warinfo"]
     if data:
-        log(request, status.HTTP_200_OK)
+        source = request.headers.get("User-Agent", source)
+        log(request, status.HTTP_200_OK, user=source)
         return data
     else:
         log(request, status.HTTP_204_NO_CONTENT)
@@ -149,11 +155,12 @@ async def get_raw_warinfo(request: Request) -> WarInfo:
 
 
 @router.get("/raw/planetstats", status_code=200)
-async def get_raw_planetstats(request: Request) -> WarSummary:
+async def get_raw_planetstats(request: Request, source: str = "") -> WarSummary:
     await update_data(isForce=False)
-    data = api_handler.planet_stats_response
+    data = api_handler.raw_data["planetStats"]
     if data:
-        log(request, status.HTTP_200_OK)
+        source = request.headers.get("User-Agent", source)
+        log(request, status.HTTP_200_OK, user=source)
         return data
     else:
         log(request, status.HTTP_204_NO_CONTENT)
@@ -161,10 +168,11 @@ async def get_raw_planetstats(request: Request) -> WarSummary:
 
 
 @router.get("/raw/newsticker", status_code=200)
-async def get_raw_newsticker(request: Request) -> NewsTicker:
-    data = api_handler.news_ticker_response
+async def get_raw_newsticker(request: Request, source: str = "") -> NewsTicker:
+    data = api_handler.raw_data["newsTicker"]
     if data:
-        log(request, status.HTTP_200_OK)
+        source = request.headers.get("User-Agent", source)
+        log(request, status.HTTP_200_OK, user=source)
         return data
     else:
         log(request, status.HTTP_204_NO_CONTENT)
@@ -172,10 +180,11 @@ async def get_raw_newsticker(request: Request) -> NewsTicker:
 
 
 @router.get("/raw/newsfeed", status_code=200)
-async def get_raw_newsfeed(request: Request) -> List[NewsFeedItem]:
-    data = api_handler.news_feed_response
+async def get_raw_newsfeed(request: Request, source: str = "") -> List[NewsFeedItem]:
+    data = api_handler.raw_data["newsFeed"]
     if data:
-        log(request, status.HTTP_200_OK)
+        source = request.headers.get("User-Agent", source)
+        log(request, status.HTTP_200_OK, user=source)
         return data
     else:
         log(request, status.HTTP_204_NO_CONTENT)
@@ -183,11 +192,12 @@ async def get_raw_newsfeed(request: Request) -> List[NewsFeedItem]:
 
 
 @router.get("/raw/timesincestart", status_code=200)
-async def get_raw_timesincestart(request: Request) -> TimeSinceStart:
+async def get_raw_timesincestart(request: Request, source: str = "") -> TimeSinceStart:
     await update_data(isForce=False)
-    data = api_handler.timesincestart_response
+    data = api_handler.raw_data["timeSinceStart"]
     if data:
-        log(request, status.HTTP_200_OK)
+        source = request.headers.get("User-Agent", source)
+        log(request, status.HTTP_200_OK, user=source)
         return data
     else:
         log(request, status.HTTP_204_NO_CONTENT)
@@ -195,10 +205,11 @@ async def get_raw_timesincestart(request: Request) -> TimeSinceStart:
 
 
 @router.get("/raw/warid", status_code=200)
-async def get_raw_warid(request: Request) -> WarID:
-    data = api_handler.warid_response
+async def get_raw_warid(request: Request, source: str = "") -> WarID:
+    data = api_handler.raw_data["warId"]
     if data:
-        log(request, status.HTTP_200_OK)
+        source = request.headers.get("User-Agent", source)
+        log(request, status.HTTP_200_OK, user=source)
         return data
     else:
         log(request, status.HTTP_204_NO_CONTENT)
@@ -206,10 +217,13 @@ async def get_raw_warid(request: Request) -> WarID:
 
 
 @router.get("/raw/galacticwareffects", status_code=200)
-async def get_raw_galacticwareffects(request: Request) -> List[GalacticWarEffect]:
-    data = api_handler.galactic_war_effects_response
+async def get_raw_galacticwareffects(
+    request: Request, source: str = ""
+) -> List[GalacticWarEffect]:
+    data = api_handler.raw_data["galacticWarEffects"]
     if data:
-        log(request, status.HTTP_200_OK)
+        source = request.headers.get("User-Agent", source)
+        log(request, status.HTTP_200_OK, user=source)
         return data
     else:
         log(request, status.HTTP_204_NO_CONTENT)
@@ -217,10 +231,11 @@ async def get_raw_galacticwareffects(request: Request) -> List[GalacticWarEffect
 
 
 @router.get("/raw/levelspec", status_code=200)
-async def get_raw_levelspec(request: Request) -> List[Level]:
-    data = api_handler.levelspec_response
+async def get_raw_levelspec(request: Request, source: str = "") -> List[Level]:
+    data = api_handler.raw_data["levelSpec"]
     if data:
-        log(request, status.HTTP_200_OK)
+        source = request.headers.get("User-Agent", source)
+        log(request, status.HTTP_200_OK, user=source)
         return data
     else:
         log(request, status.HTTP_204_NO_CONTENT)
@@ -228,13 +243,16 @@ async def get_raw_levelspec(request: Request) -> List[Level]:
 
 
 @router.get("/raw/leaderboard", status_code=200)
-async def get_raw_leaderboard(request: Request) -> Leaderboard | Error:
+async def get_raw_leaderboard(
+    request: Request, source: str = ""
+) -> Leaderboard | Error:
     """
     This may or may not break... There's a lot of bugs with this on AHGS' side.
     """
-    data = api_handler.leaderboard_response
+    data = api_handler.raw_data["leaderboard"]
     if data:
-        log(request, status.HTTP_200_OK)
+        source = request.headers.get("User-Agent", source)
+        log(request, status.HTTP_200_OK, user=source)
         return data
     else:
         log(request, status.HTTP_204_NO_CONTENT)
@@ -242,10 +260,11 @@ async def get_raw_leaderboard(request: Request) -> Leaderboard | Error:
 
 
 @router.get("/raw/items", status_code=200)
-async def get_raw_items(request: Request) -> List[Item]:
-    data = api_handler.items_api_response
+async def get_raw_items(request: Request, source: str = "") -> List[Item]:
+    data = api_handler.raw_data["items"]
     if data:
-        log(request, status.HTTP_200_OK)
+        source = request.headers.get("User-Agent", source)
+        log(request, status.HTTP_200_OK, user=source)
         return data
     else:
         log(request, status.HTTP_204_NO_CONTENT)
@@ -253,10 +272,11 @@ async def get_raw_items(request: Request) -> List[Item]:
 
 
 @router.get("/raw/missionrewards", status_code=200)
-async def get_raw_missionrewards(request: Request) -> MissionRewards:
-    data = api_handler.mission_reward_response
+async def get_raw_missionrewards(request: Request, source: str = "") -> MissionRewards:
+    data = api_handler.raw_data["missionRewards"]
     if data:
-        log(request, status.HTTP_200_OK)
+        source = request.headers.get("User-Agent", source)
+        log(request, status.HTTP_200_OK, user=source)
         return data
     else:
         log(request, status.HTTP_204_NO_CONTENT)
@@ -264,11 +284,12 @@ async def get_raw_missionrewards(request: Request) -> MissionRewards:
 
 
 @router.get("/raw/majororder", status_code=200)
-async def get_raw_majororder(request: Request) -> List[Assignment]:
+async def get_raw_majororder(request: Request, source: str = "") -> List[Assignment]:
     await update_data(isForce=False)
-    data = api_handler.major_order_response
+    data = api_handler.raw_data["majorOrder"]
     if data:
-        log(request, status.HTTP_200_OK)
+        source = request.headers.get("User-Agent", source)
+        log(request, status.HTTP_200_OK, user=source)
         return data
     else:
         log(request, status.HTTP_204_NO_CONTENT)
@@ -276,11 +297,12 @@ async def get_raw_majororder(request: Request) -> List[Assignment]:
 
 
 @router.get("/raw/updates", status_code=200)
-async def get_steam_news(request: Request) -> List[NewsItem]:
+async def get_steam_news(request: Request, source: str = "") -> List[NewsItem]:
     await update_data(isForce=False)
-    data = api_handler.steam_news_response
+    data = api_handler.raw_data["updates"]
     if data:
-        log(request, status.HTTP_200_OK)
+        source = request.headers.get("User-Agent", source)
+        log(request, status.HTTP_200_OK, user=source)
         return data
     else:
         log(request, status.HTTP_204_NO_CONTENT)
@@ -288,14 +310,15 @@ async def get_steam_news(request: Request) -> List[NewsItem]:
 
 
 @router.get("/raw/all", status_code=200)
-async def get_all_raw(request: Request) -> AllRaw:
+async def get_all_raw(request: Request, source: str = "") -> AllRaw:
     """
     All AHGS API Calls Only
     """
     await update_data(isForce=False)
-    data = api_handler.all_raw_responses
+    data = api_handler.raw_data
     if data:
-        log(request, status.HTTP_200_OK)
+        source = request.headers.get("User-Agent", source)
+        log(request, status.HTTP_200_OK, user=source)
         return data
     else:
         log(request, status.HTTP_204_NO_CONTENT)
@@ -303,11 +326,12 @@ async def get_all_raw(request: Request) -> AllRaw:
 
 
 @router.get("/favicon.ico", include_in_schema=False)
-async def favicon(request: Request):
+async def favicon(request: Request, source: str = ""):
     base_path = os.path.dirname(__file__)
     data = os.path.join(base_path, "favicon.ico")
     if data:
-        log(request, status.HTTP_200_OK)
+        source = request.headers.get("User-Agent", source)
+        log(request, status.HTTP_200_OK, user=source)
         return data
     else:
         log(request, status.HTTP_204_NO_CONTENT)
