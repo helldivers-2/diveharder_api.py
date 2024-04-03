@@ -12,7 +12,7 @@ RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
 COPY ./ /code/
 
 
-CMD ["gunicorn", "diveharder.main:API", "-w", "1", "-k", "uvicorn.workers.UvicornWorker", "--bind", "0.0.0.0:8080", "--log-syslog", "--log-level", "info"]
+CMD ["gunicorn", "diveharder.main:API", "-w", "1", "-k", "uvicorn.workers.UvicornWorker", "--bind", "0.0.0.0:1234", "--log-syslog", "--log-level", "info"]
      
 
 
