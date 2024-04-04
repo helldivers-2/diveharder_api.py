@@ -1,9 +1,11 @@
 import json
+from .settings import session_token
 
 api = {
     "REQUEST_HEADERS": {
         "Accept-Language": "en-US",
         "User-Agent": "Helldivers 2 Community API",
+        "Authorization": session_token,
     },
 }
 
