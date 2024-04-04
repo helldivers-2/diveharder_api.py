@@ -106,14 +106,37 @@ class API:
         responses = await asyncio.gather(*tasks)
         return responses
 
-    async def get_url(self, url: str = ""):
-        headers = {"Accept-Language": "en-US"}
+    async def request_auth(self, auth_urls: str, headers: dict = REQUEST_HEADERS):
+        debug(headers)
+        auth_responses = []
+        auth_request_urls = []
+        for url in auth_urls:
+            if not url.startswith("http"):
+                url = BASE_URL + url
+            auth_request_urls.append(url)
+        tasks = [
+            asyncio.create_task(self.get_url(url, headers)) for url in auth_request_urls
+        ]
+        auth_responses = await asyncio.gather(*tasks)
+        return auth_responses
+
+    async def get_url(self, url: str, headers: dict = REQUEST_HEADERS):
+        debug(headers)
         async with aiohttp.ClientSession(headers=headers) as session:
             async with session.get(url) as response:
                 debug("URL: " + url)
                 debug("Status: " + str(response.status))
-                debug("Content-type: " + str(response.headers["content-type"]))
-                return await response.json()
+                content_type = response.headers.get("content-type", "No Content Type")
+                debug("Content-type: " + str(content_type))
+                payload = None
+                if not content_type == "No Content Type" and content_type.startswith(
+                    "application/json"
+                ):
+                    payload = await response.json()
+                else:
+                    payload = await response.text()
+
+                return payload
 
     async def set_raw_all(self, responses: list = []):
         self.raw_data["status"] = self.all_data["status"] = responses[0]
@@ -133,7 +156,11 @@ class API:
             11
         ]
         self.raw_data["leaderboard"] = self.all_data["leaderboard"] = responses[12]
+        self.raw_data["updates"] = self.all_data["updates"] = (
+            await self.format_steam_news(responses[13]["appnews"]["newsitems"])
+        )
 
+    async def format_steam_news(self, all_news):
         updates_pop_list = [
             "gid",
             "is_external_url",
@@ -144,14 +171,37 @@ class API:
             "appid",
             "author",
         ]
-        for news in responses[13]["appnews"]["newsitems"]:
+        for news in all_news:
             for popper in updates_pop_list:
                 if popper in news:
                     news.pop(popper)
             news["date"] = strftime("%d-%b-%Y %H:%M", localtime(news["date"]))
-        self.raw_data["updates"] = self.all_data["updates"] = responses[13]["appnews"][
-            "newsitems"
-        ]
+
+            # Handle Formatting Steam Markdown
+            news["contents"] = sub(r"\[h1\](.*?)\[/h1\]", r"# \1", news["contents"])
+            news["contents"] = sub(r"\[h2\](.*?)\[/h2\]", r"## \1", news["contents"])
+            news["contents"] = sub(r"\[h3\](.*?)\[/h3\]", r"### \1", news["contents"])
+            news["contents"] = sub(r"\[b\](.*?)\[/b\]", r"**\1**", news["contents"])
+            news["contents"] = sub(r"\[i\](.*?)\[/i\]", r"*\1*", news["contents"])
+            news["contents"] = sub(r"\[list\]", r"\n", news["contents"])
+            news["contents"] = sub(r"\[/list\]", r"\n", news["contents"])
+            news["contents"] = sub(r"\[\*\]", "- ", news["contents"])
+
+            # Handle Non-Formatting Steam Markdown
+            news["contents"] = sub(
+                r"\[previewyoutube.+/previewyoutube\]", "", news["contents"]
+            )
+            news["contents"] = sub(r"\[img\].*?\..{3,4}\[/img\]", "", news["contents"])
+
+            # Whitespace Handling
+            news["contents"] = sub(r"\n\n", r"\n", news["contents"])
+            news["contents"] = sub(r"\n\n", r"\n", news["contents"])
+            news["contents"] = sub(r"\n\n", r"\n", news["contents"])
+            news["contents"] = sub(r"\n\n", r"\n", news["contents"])
+            news["contents"] = sub(r"  ", " ", news["contents"])
+            news["contents"] = sub(r"  ", " ", news["contents"])
+            news["contents"] = sub(r"  ", " ", news["contents"])
+        return all_news
 
     async def format_data(self):
         return True
