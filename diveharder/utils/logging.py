@@ -30,8 +30,6 @@ def update_log_level(logLevel: int):
     match logLevel:
         case 10:
             logger.setLevel(logging.DEBUG)
-        case 20:
-            logger.setLevel(logging.INFO)
         case _:
             logger.setLevel(logging.INFO)
 
@@ -51,8 +49,8 @@ def log(
             msg=f"[{request.client.host}:{request.client.port}] [{request.method} {request.url.path}] [{status}] [{source}]"
         )
     elif message:
-        logger.info(msg="[" + message + "]")
+        logger.info(msg="[" + str(message) + "]")
 
 
 def debug(message: str):
-    logger.debug(msg="[" + message + "]")
+    logger.debug(msg="[" + str(message) + "]")
