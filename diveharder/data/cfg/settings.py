@@ -6,6 +6,8 @@ if os.path.isfile("./.env"):
 
 news_feed_max_entries = "?maxEntries=1024"
 steam_news_query_params = "?appid=553850&feeds=steam_community_announcements"
+session_token: str = str(os.environ["SESSION_TOKEN"])
+auth = os.environ["API_TOKEN"]
 
 api = {
     "BASE_URL": os.environ["BASE_URL"],
