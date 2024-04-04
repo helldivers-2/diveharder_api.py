@@ -68,12 +68,12 @@ async def return_logger():
     return {"logLevel": logger.level}
 
 
-@router.get("/admin/{loggingLevel}", include_in_schema=False, status_code=200)
-async def update_logger(loggingLevel: int) -> None:
+@router.get("/admin/{loggingLevel}", include_in_schema=False, status_code=204)
+async def update_logger(loggingLevel: int):
     update_log_level(logLevel=loggingLevel)
     logger.debug("DEBUG TEST AFTER UPDATE")
     logger.info("INFO TEST AFTER UPDATE")
-    return None
+    return HTTPException(status.HTTP_204_NO_CONTENT)
 
 
 @router.get("/all", status_code=200)
@@ -129,7 +129,7 @@ async def get_sectors(request: Request, source: str = ""):
 
 
 @router.get("/raw/status", status_code=200)
-async def get_raw_status(request: Request, source: str = "") -> WarStatus:
+async def get_raw_status(request: Request, source: str = ""):
     await update_data(isForce=False)
     data = api_handler.raw_data["status"]
     if data:
@@ -142,7 +142,7 @@ async def get_raw_status(request: Request, source: str = "") -> WarStatus:
 
 
 @router.get("/raw/warinfo", status_code=200)
-async def get_raw_warinfo(request: Request, source: str = "") -> WarInfo:
+async def get_raw_warinfo(request: Request, source: str = ""):
     await update_data(isForce=False)
     data = api_handler.raw_data["warinfo"]
     if data:
@@ -155,7 +155,7 @@ async def get_raw_warinfo(request: Request, source: str = "") -> WarInfo:
 
 
 @router.get("/raw/planetstats", status_code=200)
-async def get_raw_planetstats(request: Request, source: str = "") -> WarSummary:
+async def get_raw_planetstats(request: Request, source: str = ""):
     await update_data(isForce=False)
     data = api_handler.raw_data["planetStats"]
     if data:
@@ -168,7 +168,7 @@ async def get_raw_planetstats(request: Request, source: str = "") -> WarSummary:
 
 
 @router.get("/raw/newsticker", status_code=200)
-async def get_raw_newsticker(request: Request, source: str = "") -> NewsTicker:
+async def get_raw_newsticker(request: Request, source: str = ""):
     data = api_handler.raw_data["newsTicker"]
     if data:
         source = request.headers.get("User-Agent", source)
@@ -180,7 +180,7 @@ async def get_raw_newsticker(request: Request, source: str = "") -> NewsTicker:
 
 
 @router.get("/raw/newsfeed", status_code=200)
-async def get_raw_newsfeed(request: Request, source: str = "") -> List[NewsFeedItem]:
+async def get_raw_newsfeed(request: Request, source: str = ""):
     data = api_handler.raw_data["newsFeed"]
     if data:
         source = request.headers.get("User-Agent", source)
@@ -192,7 +192,7 @@ async def get_raw_newsfeed(request: Request, source: str = "") -> List[NewsFeedI
 
 
 @router.get("/raw/timesincestart", status_code=200)
-async def get_raw_timesincestart(request: Request, source: str = "") -> TimeSinceStart:
+async def get_raw_timesincestart(request: Request, source: str = ""):
     await update_data(isForce=False)
     data = api_handler.raw_data["timeSinceStart"]
     if data:
@@ -205,7 +205,7 @@ async def get_raw_timesincestart(request: Request, source: str = "") -> TimeSinc
 
 
 @router.get("/raw/warid", status_code=200)
-async def get_raw_warid(request: Request, source: str = "") -> WarID:
+async def get_raw_warid(request: Request, source: str = ""):
     data = api_handler.raw_data["warId"]
     if data:
         source = request.headers.get("User-Agent", source)
@@ -217,9 +217,7 @@ async def get_raw_warid(request: Request, source: str = "") -> WarID:
 
 
 @router.get("/raw/galacticwareffects", status_code=200)
-async def get_raw_galacticwareffects(
-    request: Request, source: str = ""
-) -> List[GalacticWarEffect]:
+async def get_raw_galacticwareffects(request: Request, source: str = ""):
     data = api_handler.raw_data["galacticWarEffects"]
     if data:
         source = request.headers.get("User-Agent", source)
@@ -231,7 +229,7 @@ async def get_raw_galacticwareffects(
 
 
 @router.get("/raw/levelspec", status_code=200)
-async def get_raw_levelspec(request: Request, source: str = "") -> List[Level]:
+async def get_raw_levelspec(request: Request, source: str = ""):
     data = api_handler.raw_data["levelSpec"]
     if data:
         source = request.headers.get("User-Agent", source)
@@ -243,9 +241,7 @@ async def get_raw_levelspec(request: Request, source: str = "") -> List[Level]:
 
 
 @router.get("/raw/leaderboard", status_code=200)
-async def get_raw_leaderboard(
-    request: Request, source: str = ""
-) -> Leaderboard | Error:
+async def get_raw_leaderboard(request: Request, source: str = ""):
     """
     This may or may not break... There's a lot of bugs with this on AHGS' side.
     """
@@ -260,7 +256,7 @@ async def get_raw_leaderboard(
 
 
 @router.get("/raw/items", status_code=200)
-async def get_raw_items(request: Request, source: str = "") -> List[Item]:
+async def get_raw_items(request: Request, source: str = ""):
     data = api_handler.raw_data["items"]
     if data:
         source = request.headers.get("User-Agent", source)
@@ -272,7 +268,7 @@ async def get_raw_items(request: Request, source: str = "") -> List[Item]:
 
 
 @router.get("/raw/missionrewards", status_code=200)
-async def get_raw_missionrewards(request: Request, source: str = "") -> MissionRewards:
+async def get_raw_missionrewards(request: Request, source: str = ""):
     data = api_handler.raw_data["missionRewards"]
     if data:
         source = request.headers.get("User-Agent", source)
@@ -284,7 +280,7 @@ async def get_raw_missionrewards(request: Request, source: str = "") -> MissionR
 
 
 @router.get("/raw/majororder", status_code=200)
-async def get_raw_majororder(request: Request, source: str = "") -> List[Assignment]:
+async def get_raw_majororder(request: Request, source: str = ""):
     await update_data(isForce=False)
     data = api_handler.raw_data["majorOrder"]
     if data:
@@ -297,7 +293,7 @@ async def get_raw_majororder(request: Request, source: str = "") -> List[Assignm
 
 
 @router.get("/raw/updates", status_code=200)
-async def get_steam_news(request: Request, source: str = "") -> List[NewsItem]:
+async def get_steam_news(request: Request, source: str = ""):
     await update_data(isForce=False)
     data = api_handler.raw_data["updates"]
     if data:
@@ -310,7 +306,7 @@ async def get_steam_news(request: Request, source: str = "") -> List[NewsItem]:
 
 
 @router.get("/raw/all", status_code=200)
-async def get_all_raw(request: Request, source: str = "") -> AllRaw:
+async def get_all_raw(request: Request, source: str = ""):
     """
     All AHGS API Calls Only
     """
