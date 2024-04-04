@@ -14,6 +14,7 @@ TIME_DELAY = int(settings.api["TIME_DELAY"])
 TIMEOUT = int(settings.api["TIMEOUT"])
 
 REQUEST_HEADERS = constants.api["REQUEST_HEADERS"]
+AUTH_REQUEST_HEADERS = constants.api["AUTH_REQUEST_HEADERS"]
 
 urls = [
     settings.api["STATUS_API_URL"],
@@ -106,7 +107,7 @@ class API:
         responses = await asyncio.gather(*tasks)
         return responses
 
-    async def request_auth(self, auth_urls: str, headers: dict = REQUEST_HEADERS):
+    async def request_auth(self, auth_urls: str, headers: dict = AUTH_REQUEST_HEADERS):
         debug(headers)
         auth_responses = []
         auth_request_urls = []
@@ -177,15 +178,51 @@ class API:
                     news.pop(popper)
             news["date"] = strftime("%d-%b-%Y %H:%M", localtime(news["date"]))
 
+            # Whitespace Handling
+            news["contents"] = sub(r"\n\n\n", r"\n\n", news["contents"])
+            news["contents"] = sub(r"\n\n", r"\n", news["contents"])
+            news["contents"] = sub(r"\n\n", r"\n", news["contents"])
+            news["contents"] = sub(r"\n\n", r"\n", news["contents"])
+            news["contents"] = sub(r"\n\n", r"\n", news["contents"])
+            news["contents"] = sub(r"\n", r"\n", news["contents"])
+
             # Handle Formatting Steam Markdown
-            news["contents"] = sub(r"\[h1\](.*?)\[/h1\]", r"# \1", news["contents"])
-            news["contents"] = sub(r"\[h2\](.*?)\[/h2\]", r"## \1", news["contents"])
-            news["contents"] = sub(r"\[h3\](.*?)\[/h3\]", r"### \1", news["contents"])
+            news["contents"] = sub(
+                r"\[h1\](.*?)\[/h1\]", r"\n\n# \1\n\n", news["contents"]
+            )
+            news["contents"] = sub(
+                r"\[h2\](.*?)\[/h2\]", r"\n\n## \1\n\n", news["contents"]
+            )
+            news["contents"] = sub(
+                r"\[h3\](.*?)\[/h3\]", r"\n\n### \1\n\n", news["contents"]
+            )
+            news["contents"] = sub(
+                r"\[h3\](.*?)\[/h4\]", r"\n\n#### \1\n\n", news["contents"]
+            )
+            news["contents"] = sub(
+                r"\[h3\](.*?)\[/h5\]", r"\n\n##### \1\n\n", news["contents"]
+            )
+            news["contents"] = sub(
+                r"\[h3\](.*?)\[/h6\]", r"\n\n###### \1\n\n", news["contents"]
+            )
+            news["contents"] = sub(r"\[quote\]", r"\n\n> ", news["contents"])
+            news["contents"] = sub(r"\[/quote\]", r"\n\n", news["contents"])
             news["contents"] = sub(r"\[b\](.*?)\[/b\]", r"**\1**", news["contents"])
             news["contents"] = sub(r"\[i\](.*?)\[/i\]", r"*\1*", news["contents"])
             news["contents"] = sub(r"\[list\]", r"\n", news["contents"])
             news["contents"] = sub(r"\[/list\]", r"\n", news["contents"])
-            news["contents"] = sub(r"\[\*\]", "- ", news["contents"])
+            news["contents"] = sub(r"\[\*\]", "  \n- ", news["contents"])
+
+            # Handle Double Spaces
+            news["contents"] = sub(r"  ", " ", news["contents"])
+            news["contents"] = sub(r"  ", " ", news["contents"])
+            news["contents"] = sub(r"  ", " ", news["contents"])
+            news["contents"] = sub(r"  ", " ", news["contents"])
+            news["contents"] = sub(r"  ", " ", news["contents"])
+            news["contents"] = sub(r"  ", " ", news["contents"])
+            news["contents"] = sub(r"\n \n", r"\n\n", news["contents"])
+            news["contents"] = sub(r"\n\n\n\n", r"\n\n", news["contents"])
+            news["contents"] = sub(r"\n\n\n", r"\n\n", news["contents"])
 
             # Handle Non-Formatting Steam Markdown
             news["contents"] = sub(
@@ -193,14 +230,6 @@ class API:
             )
             news["contents"] = sub(r"\[img\].*?\..{3,4}\[/img\]", "", news["contents"])
 
-            # Whitespace Handling
-            news["contents"] = sub(r"\n\n", r"\n", news["contents"])
-            news["contents"] = sub(r"\n\n", r"\n", news["contents"])
-            news["contents"] = sub(r"\n\n", r"\n", news["contents"])
-            news["contents"] = sub(r"\n\n", r"\n", news["contents"])
-            news["contents"] = sub(r"  ", " ", news["contents"])
-            news["contents"] = sub(r"  ", " ", news["contents"])
-            news["contents"] = sub(r"  ", " ", news["contents"])
         return all_news
 
     async def format_data(self):

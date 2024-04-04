@@ -5,6 +5,10 @@ api = {
     "REQUEST_HEADERS": {
         "Accept-Language": "en-US",
         "User-Agent": "Helldivers 2 Community API",
+    },
+    "AUTH_REQUEST_HEADERS": {
+        "Accept-Language": "en-US",
+        "User-Agent": "Helldivers 2 Community API",
         "Authorization": session_token,
     },
 }
