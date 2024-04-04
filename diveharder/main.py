@@ -12,6 +12,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 # API CLASS IMPORT
 import diveharder.data.api as api
+import diveharder.data.cfg.settings as settings
 
 # DATA MODEL IMPORTS
 from diveharder.models.arrowhead.imports import *
@@ -63,13 +64,49 @@ async def root(request: Request, source: str = ""):
     }
 
 
+auth_check = str(settings.auth)
+
+
 @router.get("/admin/", include_in_schema=False, status_code=200)
-async def return_logger():
+async def return_logger(auth: str = ""):
+    if not auth == auth_check:
+        return "Bad Call"
     return {"logLevel": logger.level}
 
 
-@router.get("/admin/{loggingLevel}", include_in_schema=False, status_code=204)
-async def update_logger(loggingLevel: int):
+@router.get("/admin/session/{token}", include_in_schema=False, status_code=200)
+async def set_token(token: str = "", auth: str = ""):
+    print(token)
+    print(auth)
+    print(auth_check)
+    print(not not token)
+    print(auth == auth_check)
+
+    if not token or not auth == auth_check:
+        return "Bad Call"
+
+    settings.session_token = token
+    debug(settings.session_token)
+
+    return HTTPException(status.HTTP_204_NO_CONTENT)
+
+
+@router.get("/raw/storefront/rotation", include_in_schema=False, status_code=200)
+async def get_storefront_rotation():
+    rotation_data = await api_handler.request_auth(
+        [settings.api["STOREFRONT_ROTATION_API_URL"]],
+        {"Authorization": settings.session_token},
+    )
+    if rotation_data:
+        return rotation_data
+    else:
+        return "Ope, shit, fuck, damn it"
+
+
+@router.get("/admin/loglevel/{loggingLevel}", include_in_schema=False, status_code=204)
+async def update_logger(loggingLevel: int, auth: int = 0):
+    if not auth == auth_check:
+        return "Bad Call"
     update_log_level(logLevel=loggingLevel)
     logger.debug("DEBUG TEST AFTER UPDATE")
     logger.info("INFO TEST AFTER UPDATE")
@@ -84,7 +121,8 @@ async def get_all(request: Request, source: str = ""):
     await update_data(isForce=False)
     data = api_handler.all_data
     if data:
-        source = request.headers.get("User-Agent", source)
+        if not source:
+            source = request.headers.get("User-Agent", "")
         log(request, status.HTTP_200_OK, user=source)
         return data
     else:
@@ -96,7 +134,8 @@ async def get_all(request: Request, source: str = ""):
 async def get_races(request: Request, source: str = ""):
     data = api_handler.races
     if data:
-        source = request.headers.get("User-Agent", source)
+        if not source:
+            source = request.headers.get("User-Agent", "")
         log(request, status.HTTP_200_OK, user=source)
         return data
     else:
@@ -108,7 +147,8 @@ async def get_races(request: Request, source: str = ""):
 async def get_planet_names(request: Request, source: str = ""):
     data = api_handler.planet_names
     if data:
-        source = request.headers.get("User-Agent", source)
+        if not source:
+            source = request.headers.get("User-Agent", "")
         log(request, status.HTTP_200_OK, user=source)
         return data
     else:
@@ -120,7 +160,8 @@ async def get_planet_names(request: Request, source: str = ""):
 async def get_sectors(request: Request, source: str = ""):
     data = api_handler.sectors
     if data:
-        source = request.headers.get("User-Agent", source)
+        if not source:
+            source = request.headers.get("User-Agent", "")
         log(request, status.HTTP_200_OK, user=source)
         return data
     else:
@@ -133,7 +174,8 @@ async def get_raw_status(request: Request, source: str = ""):
     await update_data(isForce=False)
     data = api_handler.raw_data["status"]
     if data:
-        source = request.headers.get("User-Agent", source)
+        if not source:
+            source = request.headers.get("User-Agent", "")
         log(request, status.HTTP_200_OK, user=source)
         return data
     else:
@@ -146,7 +188,8 @@ async def get_raw_warinfo(request: Request, source: str = ""):
     await update_data(isForce=False)
     data = api_handler.raw_data["warinfo"]
     if data:
-        source = request.headers.get("User-Agent", source)
+        if not source:
+            source = request.headers.get("User-Agent", "")
         log(request, status.HTTP_200_OK, user=source)
         return data
     else:
@@ -159,7 +202,8 @@ async def get_raw_planetstats(request: Request, source: str = ""):
     await update_data(isForce=False)
     data = api_handler.raw_data["planetStats"]
     if data:
-        source = request.headers.get("User-Agent", source)
+        if not source:
+            source = request.headers.get("User-Agent", "")
         log(request, status.HTTP_200_OK, user=source)
         return data
     else:
@@ -171,7 +215,8 @@ async def get_raw_planetstats(request: Request, source: str = ""):
 async def get_raw_newsticker(request: Request, source: str = ""):
     data = api_handler.raw_data["newsTicker"]
     if data:
-        source = request.headers.get("User-Agent", source)
+        if not source:
+            source = request.headers.get("User-Agent", "")
         log(request, status.HTTP_200_OK, user=source)
         return data
     else:
@@ -183,7 +228,8 @@ async def get_raw_newsticker(request: Request, source: str = ""):
 async def get_raw_newsfeed(request: Request, source: str = ""):
     data = api_handler.raw_data["newsFeed"]
     if data:
-        source = request.headers.get("User-Agent", source)
+        if not source:
+            source = request.headers.get("User-Agent", "")
         log(request, status.HTTP_200_OK, user=source)
         return data
     else:
@@ -196,7 +242,8 @@ async def get_raw_timesincestart(request: Request, source: str = ""):
     await update_data(isForce=False)
     data = api_handler.raw_data["timeSinceStart"]
     if data:
-        source = request.headers.get("User-Agent", source)
+        if not source:
+            source = request.headers.get("User-Agent", "")
         log(request, status.HTTP_200_OK, user=source)
         return data
     else:
@@ -208,7 +255,8 @@ async def get_raw_timesincestart(request: Request, source: str = ""):
 async def get_raw_warid(request: Request, source: str = ""):
     data = api_handler.raw_data["warId"]
     if data:
-        source = request.headers.get("User-Agent", source)
+        if not source:
+            source = request.headers.get("User-Agent", "")
         log(request, status.HTTP_200_OK, user=source)
         return data
     else:
@@ -220,7 +268,8 @@ async def get_raw_warid(request: Request, source: str = ""):
 async def get_raw_galacticwareffects(request: Request, source: str = ""):
     data = api_handler.raw_data["galacticWarEffects"]
     if data:
-        source = request.headers.get("User-Agent", source)
+        if not source:
+            source = request.headers.get("User-Agent", "")
         log(request, status.HTTP_200_OK, user=source)
         return data
     else:
@@ -232,7 +281,8 @@ async def get_raw_galacticwareffects(request: Request, source: str = ""):
 async def get_raw_levelspec(request: Request, source: str = ""):
     data = api_handler.raw_data["levelSpec"]
     if data:
-        source = request.headers.get("User-Agent", source)
+        if not source:
+            source = request.headers.get("User-Agent", "")
         log(request, status.HTTP_200_OK, user=source)
         return data
     else:
@@ -247,7 +297,8 @@ async def get_raw_leaderboard(request: Request, source: str = ""):
     """
     data = api_handler.raw_data["leaderboard"]
     if data:
-        source = request.headers.get("User-Agent", source)
+        if not source:
+            source = request.headers.get("User-Agent", "")
         log(request, status.HTTP_200_OK, user=source)
         return data
     else:
@@ -259,7 +310,8 @@ async def get_raw_leaderboard(request: Request, source: str = ""):
 async def get_raw_items(request: Request, source: str = ""):
     data = api_handler.raw_data["items"]
     if data:
-        source = request.headers.get("User-Agent", source)
+        if not source:
+            source = request.headers.get("User-Agent", "")
         log(request, status.HTTP_200_OK, user=source)
         return data
     else:
@@ -271,7 +323,8 @@ async def get_raw_items(request: Request, source: str = ""):
 async def get_raw_missionrewards(request: Request, source: str = ""):
     data = api_handler.raw_data["missionRewards"]
     if data:
-        source = request.headers.get("User-Agent", source)
+        if not source:
+            source = request.headers.get("User-Agent", "")
         log(request, status.HTTP_200_OK, user=source)
         return data
     else:
@@ -284,7 +337,8 @@ async def get_raw_majororder(request: Request, source: str = ""):
     await update_data(isForce=False)
     data = api_handler.raw_data["majorOrder"]
     if data:
-        source = request.headers.get("User-Agent", source)
+        if not source:
+            source = request.headers.get("User-Agent", "")
         log(request, status.HTTP_200_OK, user=source)
         return data
     else:
@@ -297,7 +351,8 @@ async def get_steam_news(request: Request, source: str = ""):
     await update_data(isForce=False)
     data = api_handler.raw_data["updates"]
     if data:
-        source = request.headers.get("User-Agent", source)
+        if not source:
+            source = request.headers.get("User-Agent", "")
         log(request, status.HTTP_200_OK, user=source)
         return data
     else:
@@ -313,7 +368,8 @@ async def get_all_raw(request: Request, source: str = ""):
     await update_data(isForce=False)
     data = api_handler.raw_data
     if data:
-        source = request.headers.get("User-Agent", source)
+        if not source:
+            source = request.headers.get("User-Agent", "")
         log(request, status.HTTP_200_OK, user=source)
         return data
     else:
@@ -326,7 +382,8 @@ async def favicon(request: Request, source: str = ""):
     base_path = os.path.dirname(__file__)
     data = os.path.join(base_path, "favicon.ico")
     if data:
-        source = request.headers.get("User-Agent", source)
+        if not source:
+            source = request.headers.get("User-Agent", "")
         log(request, status.HTTP_200_OK, user=source)
         return data
     else:
