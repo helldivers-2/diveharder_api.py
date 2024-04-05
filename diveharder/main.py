@@ -12,11 +12,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 # API CLASS IMPORT
 import diveharder.data.api as api
-import diveharder.data.cfg.settings as settings
-
-# DATA MODEL IMPORTS
-from diveharder.models.arrowhead.imports import *
-from diveharder.models.steam.news import NewsItem
+import diveharder.cfg.settings as settings
 
 # LOGGER IMPORT
 from diveharder.utils.logging import logger, log, update_log_level, debug
@@ -94,8 +90,7 @@ async def set_token(token: str = "", auth: str = ""):
 @router.get("/raw/storefront/rotation", include_in_schema=False, status_code=200)
 async def get_storefront_rotation():
     rotation_data = await api_handler.request_auth(
-        [settings.api["STOREFRONT_ROTATION_API_URL"]],
-        {"Authorization": settings.session_token},
+        [settings.api["STOREFRONT_ROTATION_API_URL"]]
     )
     if rotation_data:
         return rotation_data
@@ -104,9 +99,7 @@ async def get_storefront_rotation():
 
 
 @router.get("/admin/loglevel/{loggingLevel}", include_in_schema=False, status_code=204)
-async def update_logger(loggingLevel: int, auth: int = 0):
-    if not auth == auth_check:
-        return "Bad Call"
+async def update_logger(loggingLevel: int):
     update_log_level(logLevel=loggingLevel)
     logger.debug("DEBUG TEST AFTER UPDATE")
     logger.info("INFO TEST AFTER UPDATE")
