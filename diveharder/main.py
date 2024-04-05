@@ -2,16 +2,19 @@
 from contextlib import asynccontextmanager
 from time import gmtime, strftime
 import os
+from typing import Annotated
 
 # FASTAPI IMPORTS
-from fastapi import APIRouter, FastAPI, status, HTTPException
+from fastapi import APIRouter, FastAPI, status, HTTPException, Depends
 from fastapi.requests import Request
 from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.security import OAuth2PasswordBearer
 
 # API CLASS IMPORT
 import diveharder.data.api as api
 import diveharder.cfg.settings as settings
+from diveharder.utils.security import get_password_hash, verify_password
 
 # LOGGER IMPORT
 from diveharder.utils.logging import logger, log, update_log_level, debug
@@ -39,9 +42,8 @@ API = FastAPI(
 )
 
 
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 api_handler = api.API()
-
-
 router = APIRouter()
 
 
@@ -59,50 +61,39 @@ async def root(request: Request, source: str = ""):
     }
 
 
-auth_check = str(settings.auth)
+@router.get("/admin", status_code=200)
+async def return_admin_settings(request: Request):
+    if verify_password(request.headers["Authorization"]):
+        return {"logLevel": logger.level, "sessionToken": settings.session_token}
+    return HTTPException(status.HTTP_401_UNAUTHORIZED)
 
 
-@router.get("/admin/", include_in_schema=False, status_code=200)
-async def return_logger(auth: str = ""):
-    if not auth == auth_check:
-        return "Bad Call"
-    return {"logLevel": logger.level}
-
-
-@router.get("/admin/session/{token}", include_in_schema=False, status_code=200)
-async def set_token(token: str = "", auth: str = ""):
-    print(token)
-    print(auth)
-    print(auth_check)
-    print(not not token)
-    print(auth == auth_check)
-
-    if not token or not auth == auth_check:
-        return "Bad Call"
-
-    settings.session_token = token
-    debug(settings.session_token)
-
-    return HTTPException(status.HTTP_204_NO_CONTENT)
-
-
-@router.get("/raw/storefront/rotation", include_in_schema=False, status_code=200)
-async def get_storefront_rotation():
-    rotation_data = await api_handler.request_auth(
-        [settings.api["STOREFRONT_ROTATION_API_URL"]]
-    )
-    if rotation_data:
-        return rotation_data
+@router.post("/admin/session", include_in_schema=False)
+async def set_token(request: Request):
+    token = await request.json()
+    token = token["token"]
+    if not token:
+        return HTTPException(status.HTTP_400_BAD_REQUEST)
+    if verify_password(request.headers["Authorization"]):
+        settings.session_token = token
+        return status.HTTP_202_ACCEPTED
     else:
-        return "Ope, shit, fuck, damn it"
+        return HTTPException(status.HTTP_401_UNAUTHORIZED)
 
 
-@router.get("/admin/loglevel/{loggingLevel}", include_in_schema=False, status_code=204)
-async def update_logger(loggingLevel: int):
-    update_log_level(logLevel=loggingLevel)
-    logger.debug("DEBUG TEST AFTER UPDATE")
-    logger.info("INFO TEST AFTER UPDATE")
-    return HTTPException(status.HTTP_204_NO_CONTENT)
+@router.post("/admin/loglevel/", include_in_schema=False)
+async def update_logger(request: Request):
+    loggingLevel = await request.json()
+    level = loggingLevel["loglevel"]
+    print(level)
+    print(request.headers["Authorization"])
+    if not level:
+        return HTTPException(status.HTTP_400_BAD_REQUEST)
+    if verify_password(request.headers["Authorization"]):
+        update_log_level(logLevel=level)
+        return HTTPException(status.HTTP_202_ACCEPTED)
+    else:
+        return HTTPException(status.HTTP_401_UNAUTHORIZED)
 
 
 @router.get("/all", status_code=200)
