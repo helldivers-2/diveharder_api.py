@@ -9,33 +9,15 @@ from diveharder.utils.logging import logger, log, debug
 import diveharder.cfg.constants as constants
 import diveharder.cfg.settings as settings
 
-BASE_URL = settings.api["BASE_URL"]
-TIME_DELAY = int(settings.api["TIME_DELAY"])
-TIMEOUT = int(settings.api["TIMEOUT"])
+TIME_DELAY = int(settings.TIME_DELAY)
+TIMEOUT = int(settings.TIMEOUT)
 
 REQUEST_HEADERS = constants.api["REQUEST_HEADERS"]
 AUTH_REQUEST_HEADERS = constants.api["AUTH_REQUEST_HEADERS"]
 
-unauth_urls = [
-    settings.api["HOTF_LEADERBOARD_API_URL"],
-    settings.api["STEAM_NEWS_API_URL"],
-]
+unauth_urls = settings.urls["unauth"]
 
-auth_urls = [
-    settings.api["STATUS_API_URL"],
-    settings.api["WARINFO_API_URL"],
-    settings.api["PLANET_STATS_API_URL"],
-    settings.api["MAJOR_ORDER_API_URL"],
-    settings.api["NEWS_FEED_API_URL"],
-    settings.api["WARID_API_URL"],
-    settings.api["TIMESINCESTART_API_URL"],
-    settings.api["NEWS_TICKER_API_URL"],
-    settings.api["GALACTICE_WAR_EFFECTS_API_URL"],
-    settings.api["LEVELSPEC_API_URL"],
-    settings.api["ITEMS_API_URL"],
-    settings.api["MISSION_REWARD_API_URL"],
-    settings.api["STOREFRONT_ROTATION_API_URL"],
-]
+auth_urls = settings.urls["auth"]
 
 
 class API:
@@ -104,9 +86,8 @@ class API:
     async def request(self, headers: dict = REQUEST_HEADERS):
         responses = []
         request_urls = []
+
         for url in unauth_urls:
-            if not url.startswith("http"):
-                url = BASE_URL + url
             request_urls.append(url)
         tasks = [
             asyncio.create_task(self.get_url(url, headers=headers))
@@ -120,8 +101,6 @@ class API:
         auth_request_urls = []
 
         for url in local_auth_urls:
-            if not url.startswith("http"):
-                url = BASE_URL + url
             auth_request_urls.append(url)
         tasks = [asyncio.create_task(self.get_url(url)) for url in auth_request_urls]
         auth_responses = await asyncio.gather(*tasks)
