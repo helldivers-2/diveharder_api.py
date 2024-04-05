@@ -1,7 +1,6 @@
 # STD LIB IMPORTS
 from contextlib import asynccontextmanager
-from time import gmtime, strftime, sleep
-from typing import List
+from time import gmtime, strftime
 import os
 
 # FASTAPI IMPORTS
@@ -371,7 +370,7 @@ async def get_all_raw(request: Request, source: str = ""):
 
 
 @router.get("/favicon.ico", include_in_schema=False)
-async def favicon(request: Request, source: str = ""):
+async def favicon(request: Request, source: str = "") -> FileResponse:
     base_path = os.path.dirname(__file__)
     data = os.path.join(base_path, "favicon.ico")
     if data:
