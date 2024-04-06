@@ -63,7 +63,7 @@ async def root(request: Request, source: str = ""):
 
 @router.get("/admin", status_code=200)
 async def return_admin_settings(request: Request):
-    if verify_password(request.headers["Authorization"]):
+    if verify_password(request.headers.get("Authorization", "")):
         return {"logLevel": logger.level, "sessionToken": settings.session_token}
     return HTTPException(status.HTTP_401_UNAUTHORIZED)
 
@@ -74,7 +74,7 @@ async def set_token(request: Request):
     token = token["token"]
     if not token:
         return HTTPException(status.HTTP_400_BAD_REQUEST)
-    if verify_password(request.headers["Authorization"]):
+    if verify_password(request.headers.get("Authorization", "")):
         settings.session_token = token
         return status.HTTP_202_ACCEPTED
     else:
