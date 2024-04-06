@@ -64,7 +64,7 @@ DB=mydb</code></pre>
 </details>
 <details>
 <summary>Local Deployment</summary>
-<pre><code> uvicorn app.main:app --host 127.0.0.1 --port 80 --reload</pre></code>
+<pre><code> uvicorn diveharder.main:api --host 127.0.0.1 --port 80 --reload</pre></code>
 </details>
 You are now fully setup, and can access your project at:
 <pre><code>http://localhost
