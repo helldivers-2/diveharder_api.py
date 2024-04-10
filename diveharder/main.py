@@ -61,7 +61,7 @@ async def root(request: Request, source: str = ""):
     }
 
 
-@router.get("/admin", status_code=200)
+@router.get("/admin", status_code=200, include_in_schema=False)
 async def return_admin_settings(request: Request):
     if verify_password(request.headers.get("Authorization", "")):
         return {"logLevel": logger.level, "sessionToken": settings.session_token}
