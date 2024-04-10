@@ -150,6 +150,9 @@ class API:
         self.raw_data["store_rotation"] = self.all_data["store_rotation"] = (
             auth_responses[12]
         )
+        self.raw_data["minigame_leaderboard"] = self.all_data[
+            "minigame_leaderboard"
+        ] = auth_responses[16]
 
     async def format_steam_news(self, all_news):
         updates_pop_list = [
@@ -168,15 +171,15 @@ class API:
                     news.pop(popper)
             news["date"] = strftime("%d-%b-%Y %H:%M", localtime(news["date"]))
 
-            # Whitespace Handling
-            news["contents"] = sub(r"\n ", r"\n", news["contents"])
-            news["contents"] = sub(r" \n", r"\n", news["contents"])
-            news["contents"] = sub(r"\n\n", r"\n", news["contents"])
-            news["contents"] = sub(r"\n\n", r"\n", news["contents"])
-            news["contents"] = sub(r"\n\n", r"\n", news["contents"])
-            news["contents"] = sub(r"\n\n", r"\n", news["contents"])
-            news["contents"] = sub(r"\n\n", r"\n", news["contents"])
-            news["contents"] = sub(r"\n\n", r"\n", news["contents"])
+            # Handle Non-Formatting Steam Markdown
+            news["contents"] = sub(
+                r"\[previewyoutube=(.+);full\]\[/previewyoutube\]",
+                "[YouTube](https://www.youtube.com/watch?v=" + r"\1)",
+                news["contents"],
+            )
+            news["contents"] = sub(
+                r"\[img\](.*?\..{3,4})\[/img\]", "", news["contents"]
+            )
 
             # Handle Formatting Steam Markdown
             news["contents"] = sub(
@@ -200,11 +203,9 @@ class API:
             news["contents"] = sub(
                 r"\[url=(.+?)](.+?)\[/url\]", r"[\2]\(\1\)", news["contents"]
             )
-
-            news["contents"] = sub(r"\[quote\]", r"\n\n> ", news["contents"])
             news["contents"] = sub(r"\[quote\]", r"\n\n> ", news["contents"])
             news["contents"] = sub(r"\[/quote\]", r"\n\n", news["contents"])
-            news["contents"] = sub(r"\[b\]", r"\n**", news["contents"])
+            news["contents"] = sub(r"\[b\]", r"**", news["contents"])
             news["contents"] = sub(r"\[/b\]", r"**", news["contents"])
             news["contents"] = sub(r"\[i\]", r"*", news["contents"])
             news["contents"] = sub(r"\[/i\]", r"*", news["contents"])
@@ -213,27 +214,7 @@ class API:
             news["contents"] = sub(r"\[list\]", r"\n", news["contents"])
             news["contents"] = sub(r"\[/list\]", r"\n", news["contents"])
             news["contents"] = sub(r"\[\*\]", r"  \n- ", news["contents"])
-
-            # Handle Double Spaces
-            news["contents"] = sub(r"  ", " ", news["contents"])
-            news["contents"] = sub(r"  ", " ", news["contents"])
-            news["contents"] = sub(r"  ", " ", news["contents"])
-            news["contents"] = sub(r"  ", " ", news["contents"])
-            news["contents"] = sub(r"  ", " ", news["contents"])
-            news["contents"] = sub(r"  ", " ", news["contents"])
-            news["contents"] = sub(r"\\n \\n", r"\n\n", news["contents"])
-            news["contents"] = sub(r"\\n\\n\\n", r"\\n\\n", news["contents"])
-            news["contents"] = sub(r"\\n\\n\\n", r"\\n\\n", news["contents"])
-            news["contents"] = sub(r"\\n\\n\\n", r"\\n\\n", news["contents"])
-
-            # Handle Non-Formatting Steam Markdown
-            news["contents"] = sub(
-                r"\[previewyoutube=(.+);full\]\[/previewyoutube\]",
-                "[YouTube](https://www.youtube.com/watch?v=" + r"\1)",
-                news["contents"],
-            )
-            news["contents"] = sub(r"\[img\].*?\..{3,4}\[/img\]", "", news["contents"])
-
+            news["contents"].replace("\\n\\n\\n\\n", "\\n\\n")
         return all_news
 
     async def format_data(self):
