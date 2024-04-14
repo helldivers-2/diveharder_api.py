@@ -1,0 +1,28 @@
+POST http://localhost:8000/admin/loglevel
+Accept: "application/json"
+Authorization: Bearer 823199403072001
+Content-Type: application/json
+
+{
+"loglevel": "DEBUG"
+}
+
+###
+# Test your FastAPI endpoints
+
+POST http://127.0.0.1:8000/admin/session
+Accept: "application/json"
+Authorization: Bearer 823199403072001
+Content-Type: application/json
+
+{
+"token": "Session 0"
+}
+
+###
+
+GET http://127.0.0.1:8000/admin/settings
+Accept: 'application/json'
+Authorization: Bearer 823199403072001
+
+###
