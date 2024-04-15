@@ -54,9 +54,7 @@ class API:
         current_time = int(time())
         time_diff = current_time - update_time
         log.debug(f"API | Time Check | {time_diff} seconds")
-        if time_diff > self.time_delay:
-            return True
-        return False
+        return time_diff > self.time_delay
 
     async def update_all(self):
         log.debug("API | Update All")
@@ -72,8 +70,6 @@ class API:
                         self.raw_data[key]["data"]["appnews"]["newsitems"]
                     )
             self.update_time = int(time())
-            return True
-        return False
 
     async def fetch_all(self):
         log.debug(f"API | Fetching All Data")
