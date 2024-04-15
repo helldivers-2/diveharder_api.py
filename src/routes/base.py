@@ -7,14 +7,14 @@ import src.utils.log as log
 router = APIRouter()
 
 
-@router.get("/")
+@router.get("/", include_in_schema=False)
 async def root(request: Request, source: str = None):
     # Base level route. Useful for health checks.
     log.info(request, status.HTTP_200_OK, source)
-    return "Good Job"
+    return "You made it, Helldiver! Sit, and have a drink!"
 
 
-@router.get("/favicon.ico")
+@router.get("/favicon.ico", include_in_schema=False)
 async def favicon():
     # Provides an icon for those who visit the site.
     return FileResponse("src/favicon.ico", media_type="image/x-icon")
