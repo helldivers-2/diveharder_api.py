@@ -30,8 +30,7 @@ async def settings(request: Request, source: str = None):
         request_json = await request.json()
         token = request_json["token"]
         if token:
-            session_token = request.headers.get("token", "")
-            api_cfg["AUTH_REQUEST_HEADERS"]["Authorization"] = f"{token}"
+            api_cfg["auth_headers"]["Authorization"] = f"{token}"
             log.info(request, status.HTTP_202_ACCEPTED, source)
             raise HTTPException(status_code=status.HTTP_202_ACCEPTED)
         else:
