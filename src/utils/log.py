@@ -32,12 +32,7 @@ def info(request: Request, response_status: status, user: str = ""):
         source = user
 
     logger.info(
-        f"\
-                [{request.headers.get('fly-client-ip', request.client.host)}] \
-                [{request.method} {request.url.path}] \
-                [{response_status}] \
-                [{source}] \
-                "
+        f"[{request.headers.get('fly-client-ip', request.client.host)}] [{request.method} {request.url.path}] [{response_status}] [{source}] "
     )
 
 
