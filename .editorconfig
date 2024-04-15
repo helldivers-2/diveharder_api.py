@@ -15,7 +15,7 @@ ij_formatter_tags_enabled = true
 ij_smart_tabs = false
 ij_wrap_on_typing = false
 
-[{*.har,*.jsb2,*.jsb3,*.json,*.jsonc,*.postman_collection,*.postman_collection.json,*.postman_environment,*.postman_environment.json,.babelrc,.eslintrc,.prettierrc,.stylelintrc,bowerrc,jest.config}]
+[{*.har,*.jsb2,*.jsb3,*.json,*.jsonc,*.postman_collection,*.postman_environment,.babelrc,.eslintrc,.prettierrc,.stylelintrc,bowerrc,jest.config}]
 indent_style = tab
 ij_json_array_wrapping = split_into_lines
 ij_json_keep_blank_lines_in_code = 0
