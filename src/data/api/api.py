@@ -53,16 +53,21 @@ class API:
         log.debug("API | Time Check")
         current_time = int(time())
         time_diff = current_time - update_time
-        if time_diff < self.time_delay:
-            log.debug(f"API | Time Check | {time_diff} seconds")
+        log.debug(f"API | Time Check | {time_diff} seconds")
+        if time_diff > self.time_delay:
             return True
         return False
 
     async def update_all(self):
         log.debug("API | Update All")
         responses = await self.fetch_all()
-        for i, (key, value) in enumerate(self.raw_data.items()):
-            self.raw_data[key]["data"] = responses[i]
+        if self.time_check(update_time=int(time())):
+            # Update Needed
+            for i, (key, value) in enumerate(self.raw_data.items()):
+                self.raw_data[key]["data"] = responses[i]
+            self.update_time = int(time())
+            return True
+        return False
 
     async def fetch_all(self):
         log.debug(f"API | Fetching All Data")
@@ -87,6 +92,7 @@ class API:
         if update_needed:
             authed = self.raw_data[info_name]["auth"]
             url = self.urls[info_name]
+            self.raw_data[info_name]["update_time"] = int(time())
             self.raw_data[info_name]["data"] = await self.get_url(url, authed)
             if info_name == "updates":
                 self.raw_data[info_name]["data"] = await self.format_steam_news(
