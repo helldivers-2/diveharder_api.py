@@ -18,7 +18,7 @@ async def settings(request: Request, source: str = None):
         log.info(request, status.HTTP_200_OK, source)
         return {
             "log_level": log.logger.level,
-            "session_token": api_cfg["AUTH_REQUEST_HEADERS"].get("Authorization", ""),
+            "session_token": api_cfg["auth_headers"].get("Authorization", ""),
         }
     log.info(request, status.HTTP_401_UNAUTHORIZED, source)
     raise HTTPException(status_code=401, detail="Unauthorized")
