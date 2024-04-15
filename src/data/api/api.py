@@ -19,7 +19,7 @@ class API:
 
         self.urls = cfg.urls
 
-        self.update_time = int(time())
+        self.update_time = 0
         self.time_delay = cfg.ahgs_api.get("time_delay")
 
         self.raw_data = {
@@ -61,10 +61,16 @@ class API:
     async def update_all(self):
         log.debug("API | Update All")
         responses = await self.fetch_all()
-        if self.time_check(update_time=int(time())):
+        update_needed = await self.time_check(update_time=self.update_time)
+        if update_needed:
             # Update Needed
             for i, (key, value) in enumerate(self.raw_data.items()):
                 self.raw_data[key]["data"] = responses[i]
+                self.raw_data[key]["update_time"] = int(time())
+                if key == "updates":
+                    self.raw_data[key]["data"] = await self.format_steam_news(
+                        self.raw_data[key]["data"]["appnews"]["newsitems"]
+                    )
             self.update_time = int(time())
             return True
         return False
@@ -86,17 +92,19 @@ class API:
     async def fetch_data(self, info_name: str = ""):
         log.debug(f"API | Fetching {info_name} Data")
 
-        update_needed = self.time_check(
-            update_time=self.raw_data[info_name]["update_time"]
+        update_needed = await self.time_check(
+            update_time=self.raw_data.get(info_name, {"bool": False}).get(
+                "update_time", int(time())
+            )
         )
         if update_needed:
-            authed = self.raw_data[info_name]["auth"]
+            authed = self.raw_data.get(info_name)["auth"]
             url = self.urls[info_name]
             self.raw_data[info_name]["update_time"] = int(time())
             self.raw_data[info_name]["data"] = await self.get_url(url, authed)
             if info_name == "updates":
                 self.raw_data[info_name]["data"] = await self.format_steam_news(
-                    self.raw_data[info_name]["data"]
+                    self.raw_data[info_name]["data"]["appnews"]["newsitems"]
                 )
 
     async def get_url(self, url: str, auth: bool):
@@ -126,7 +134,7 @@ class API:
             for popper in updates_pop_list:
                 if popper in news:
                     news.pop(popper)
-            news["date"] = strftime("%d-%b-%Y %H:%M", localtime(news["date"]))
+            news["date"] = strftime("%d-%b-%Y %H:%M", localtime(int(news["date"])))
 
             # Handle Non-Formatting Steam Markdown
             news["contents"] = sub(
