@@ -14,7 +14,7 @@ A proxy API providing endpoints to access Helldivers 2 API data
 For a sanitary environment, dev work should be done inside a [Virtual Environment](https://docs.python.org/3/library/venv.html)<br>
 
 
-```bash
+```shell
 python -m pip install --user --upgrade pip
 python -m pip install --user virtualenv
 python -m venv venv
