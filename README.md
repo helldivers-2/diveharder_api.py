@@ -1,6 +1,9 @@
-![HD2 Community API](https://i.imgur.com/I1wosdV.png)
+<img src="https://i.imgur.com/I1wosdV.png" width="55%">
 
-A proxy API providing endpoints to access Helldivers 2 API data, both RAW API Data and Formatted API Data.
+[![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)](https://www.python.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-005571?style=for-the-badge&logo=fastapi)](https://fastapi.tiangolo.com/)[![Python Black](https://img.shields.io/badge/Python%20Black-000000?style=for-the-badge&logo=python&logoColor=FFFFFF&labelColor=000000&color=000000)](https://github.com/psf/black)
+
+A proxy API providing endpoints to access Helldivers 2 API data
 <br />
 
 <details>
@@ -11,14 +14,16 @@ A proxy API providing endpoints to access Helldivers 2 API data, both RAW API Da
 For a sanitary environment, dev work should be done inside a [Virtual Environment](https://docs.python.org/3/library/venv.html)<br>
 
 
-<pre><code>python -m pip install --user --upgrade pip
+```bash
+python -m pip install --user --upgrade pip
 python -m pip install --user virtualenv
 python -m venv venv
 # Windows
 ./venv/Scripts/activate
 # Linux/MacOS
 source ./venv/bin/activate
-pip install -r ./requirements.txt</code></pre>
+pip install -r ./requirements.txt
+```
 
 </details>
 
@@ -34,27 +39,24 @@ SESSION_TOKEN is for accessing AHGS API's that require authentication
 
 <details>
 <summary>Local Deployment</summary>
-<pre><code>
+
+```shell
 docker build -t myappimage .
 docker run --name myappname -p 1234:1234 myappimage
+```
 
-</code></pre>
 </details>
 
 You are now fully setup, and can access your project at:
-<pre><code>
+```http
 localhost:1234
 localhost:1234/docs
-</code></pre>
+```
 
 </details>
 
 <details>
 <summary>Acknowledgements</summary>
 
-Language | API | Database
-
-[![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)](https://www.python.org/)
-[![FastAPI](https://img.shields.io/badge/FastAPI-005571?style=for-the-badge&logo=fastapi)](https://fastapi.tiangolo.com/)[![Python Black](https://img.shields.io/badge/Python%20Black-000000?style=for-the-badge&logo=python&logoColor=FFFFFF&labelColor=000000&color=000000)](https://github.com/psf/black)
-<br />@dealloc, @lambstream, and the @helldivers-2 organization
+[@dealloc](https://github.com/dealloc/), [@lambstream](https://github.com/lambstream) , and the [@helldivers-2](https://github.com/helldivers-2/) organization
 </details>
