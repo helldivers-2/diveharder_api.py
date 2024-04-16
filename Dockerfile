@@ -1,5 +1,4 @@
-ARG PYVERSION=3.12.2
-FROM python:${PYVERSION}-alpine
+FROM python:3.12-alpine
 
 EXPOSE 1234
 
@@ -9,10 +8,6 @@ COPY ./requirements.txt /code/requirements.txt
 
 RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
 
-COPY ./ /code/
+COPY ./src /code/src
 
-
-CMD ["gunicorn", "diveharder.main:API", "-w", "1", "-k", "uvicorn.workers.UvicornWorker", "--bind", "0.0.0.0:1234", "--log-syslog", "--log-level", "info"]
-     
-
-
+CMD ["gunicorn", "src.main:app", "-w", "1", "-k", "uvicorn.workers.UvicornWorker", "--bind", "0.0.0.0:1234", "--log-syslog", "--log-level", "info"]
