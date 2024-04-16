@@ -1,0 +1,36 @@
+# fly.toml app configuration file generated for diveharder-api-py on 2024-04-01T19:50:43-04:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = 'diveharder-api-py'
+primary_region = 'iad'
+kill_signal = 'SIGTERM'
+
+[build]
+  dockerfile = 'Dockerfile'
+  ignorefile = '.dockerignore'
+
+[http_service]
+  internal_port = 1234
+  force_https = true
+  auto_stop_machines = true
+  auto_start_machines = true
+  min_machines_running = 1
+  processes = ['app']
+
+  [http_service.concurrency]
+    type = 'connections'
+    hard_limit = 1000
+    soft_limit = 1000
+
+[[http_service.checks]]
+    interval = '5m0s'
+    timeout = '5s'
+    grace_period = '20s'
+    method = 'GET'
+    path = '/'
+
+[[vm]]
+  size = 'shared-cpu-1x'
+  memory = '256mb'
