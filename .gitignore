@@ -252,3 +252,4 @@ cython_debug/
 .idea/
 json/
 test/
+!.env.example
