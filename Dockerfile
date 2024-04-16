@@ -1,5 +1,7 @@
 FROM python:3.12-alpine
 
+EXPOSE 1234
+
 WORKDIR /code
 
 COPY ./requirements.txt /code/requirements.txt
