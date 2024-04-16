@@ -1,5 +1,7 @@
 from fastapi import APIRouter, status, HTTPException
 from fastapi.requests import Request
+from starlette.responses import RedirectResponse
+
 from src.data.api import handler
 import src.utils.log as log
 
@@ -24,6 +26,11 @@ async def get_all_raw(request: Request, source: str = ""):
             data[k] = v["data"]
     log.info(request, status.HTTP_200_OK, source)
     return data
+
+
+@router.get("/raw/planetstats")
+async def redirect_planetstats():
+    return RedirectResponse("/raw/planet_stats")
 
 
 @router.get("/raw/{data_id}", status_code=200)
