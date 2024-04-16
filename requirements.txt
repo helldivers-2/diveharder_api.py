@@ -4,3 +4,6 @@ bcrypt~=4.1.2
 starlette~=0.37.2
 aiohttp~=3.9.3
 requests~=2.31.0
+gitpython~=3.1.43
+gunicorn~=21.2.0
+uvicorn~=0.29.0
