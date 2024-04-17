@@ -10,6 +10,7 @@ api = handler.api
 router = APIRouter()
 
 
+@router.get("/all")
 @router.get("/raw/all", status_code=200)
 async def get_all_raw(request: Request, source: str = ""):
     """
@@ -33,7 +34,6 @@ async def redirect_planetstats():
     return RedirectResponse("/raw/planet_stats")
 
 
-@router.get("/all")
 @router.get("/raw/{data_id}", status_code=200)
 async def get_raw(request: Request, data_id: str, source: str = ""):
     """Return api data where id is the key value found in `/raw/all`\n
