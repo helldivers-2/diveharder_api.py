@@ -29,6 +29,7 @@ def update_log_level(log_level):
 def info(request: Request, response_status: status, user: str = ""):
     if user == "" or user is None:
         source = request.headers.get("User-Agent")
+        user = "No User"
     else:
         source = user
     logger.info("Source: " + user)
