@@ -7,3 +7,4 @@ requests~=2.31.0
 gitpython~=3.1.43
 gunicorn~=21.2.0
 uvicorn~=0.29.0
+brotli-asgi~=1.4.0
