@@ -15,7 +15,7 @@ jobs:
           repository: chatterchats/private_env
           token: ${{ secrets.GH_API_TOKEN }}
           sparse-checkout: .env
-          path: ./src/cfg/env/.env
+          path: ./src/cfg/env/
       - uses: superfly/flyctl-actions/setup-flyctl@master
       - run: flyctl deploy --remote-only
         env:
