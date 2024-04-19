@@ -1,6 +1,8 @@
 # from git import Repo
 import os
 from json import load, dump, dumps, loads
+from git import Repo
+
 
 raw_json_data = {}
 json_data = {}
