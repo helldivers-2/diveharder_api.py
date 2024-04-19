@@ -7,6 +7,7 @@ from dotenv import load_dotenv
 if os.path.isfile("./src/cfg/env/.env"):
     load_dotenv("./src/cfg/env/.env")
 
+
 security = {
     "token": os.environ["SECURITY_TOKEN"],
 }

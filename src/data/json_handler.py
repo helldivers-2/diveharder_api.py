@@ -15,10 +15,10 @@ def check_if_json_files_exist():
     return False
 
 
-"""def get_jsons_from_github():
+def get_jsons_from_github():
     git_url = "https://github.com/helldivers-2/json"
     path = "./src/data/json"
-    Repo.clone_from(git_url, path)"""
+    Repo.clone_from(git_url, path)
 
 
 def get_json_files():
