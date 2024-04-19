@@ -1,9 +1,10 @@
-from git import Repo
+# from git import Repo
 import os
-from json import load, dump
+from json import load, dump, dumps, loads
 
 raw_json_data = {}
 json_data = {}
+helper_data = {}
 
 
 def check_if_json_files_exist():
@@ -14,10 +15,10 @@ def check_if_json_files_exist():
     return False
 
 
-def get_jsons_from_github():
+"""def get_jsons_from_github():
     git_url = "https://github.com/helldivers-2/json"
     path = "./src/data/json"
-    Repo.clone_from(git_url, path)
+    Repo.clone_from(git_url, path)"""
 
 
 def get_json_files():
@@ -26,7 +27,9 @@ def get_json_files():
         for file in files:
             if file.endswith(".json"):
                 json_path = os.path.join(subdir, file)
-                json_base = os.path.basename(json_path)
+                json_base = json_path.replace("./src/data/json", "")
+                json_base = json_base.replace("/", "_")
+                json_base = json_base.replace("\\", "_")[1:]
                 json_split = json_base.split(".")[0]
                 with open(json_path, "r", encoding="utf-8") as json_file:
                     raw_json_data[json_split] = load(json_file)
@@ -34,34 +37,38 @@ def get_json_files():
 
 def sort_json_dicts():
     global json_data
+    global helper_data
+    helper_data = {
+        "item_list": raw_json_data["items_item_names"],
+    }
     json_data = {
         "planets": {
-            "planets": raw_json_data["planets"],
-            "biomes": raw_json_data["biomes"],
-            "environmentals": raw_json_data["environmentals"],
+            "planets": raw_json_data["planets_planets"],
+            "biomes": raw_json_data["planets_biomes"],
+            "environmentals": raw_json_data["planets_environmentals"],
         },
         "items": {
             "armor": {
-                "list": raw_json_data["armor"],
-                "passives": raw_json_data["passive"],
-                "slots": raw_json_data["slot"],
+                "list": raw_json_data["items_armor_armor"],
+                "passives": raw_json_data["items_armor_passive"],
+                "slots": raw_json_data["items_armor_slot"],
             },
             "weapons": {
-                "primaries": raw_json_data["primary"],
-                "secondaries": raw_json_data["secondary"],
-                "grenades": raw_json_data["grenades"],
-                "fire_modes": raw_json_data["fire_modes"],
-                "traits": raw_json_data["traits"],
-                "types": raw_json_data["types"],
+                "primaries": raw_json_data["items_weapons_primary"],
+                "secondaries": raw_json_data["items_weapons_secondary"],
+                "grenades": raw_json_data["items_weapons_grenades"],
+                "fire_modes": raw_json_data["items_weapons_fire_modes"],
+                "traits": raw_json_data["items_weapons_traits"],
+                "types": raw_json_data["items_weapons_types"],
             },
-            "boosters": raw_json_data["boosters"],
-            "item_list": raw_json_data["item_names"],
+            "boosters": raw_json_data["items_boosters"],
+            "item_list": raw_json_data["items_item_names"],
         },
         "warbonds": {
-            "helldivers_mobilize": raw_json_data["helldivers_mobilize"],
-            "steeled_veterans": raw_json_data["steeled_veterans"],
-            "cutting_edge": raw_json_data["cutting_edge"],
-            "democratic_detonation": raw_json_data["democratic_detonation"],
+            "helldivers_mobilize": raw_json_data["warbonds_helldivers_mobilize"],
+            "steeled_veterans": raw_json_data["warbonds_steeled_veterans"],
+            "cutting_edge": raw_json_data["warbonds_cutting_edge"],
+            "democratic_detonation": raw_json_data["warbonds_democratic_detonation"],
         },
         "factions": raw_json_data["factions"],
     }
@@ -72,14 +79,15 @@ def expand_json():
     global json_data
     for i, (k, v) in enumerate(json_data["planets"]["planets"].items()):
         # Handle Planet Biomes
-        v["biome"] = raw_json_data["biomes"][v["biome"]]
+        v["biome"] = json_data["planets"]["biomes"][v["biome"]]
         # Handle Planet Environmentals
         environ_array = []
         for envrion in v["environmentals"]:
-            environ_array.append(raw_json_data["environmentals"].get(envrion, ""))
+            environ_array.append(
+                json_data["planets"]["environmentals"].get(envrion, "")
+            )
         v["environmentals"] = environ_array
     json_data["planets"] = json_data["planets"]["planets"]
-
     # Handle Items
     # Handle Armors
     for i, (k, v) in enumerate(json_data["items"]["armor"]["list"].items()):
@@ -98,7 +106,9 @@ def expand_json():
 
     # Handle Primary Weapons
     for i, (k, v) in enumerate(json_data["items"]["weapons"]["primaries"].items()):
-        v["type"] = json_data["items"]["weapons"]["types"][str(v["type"])]
+        v["type"] = json_data["items"]["weapons"]["types"].get(
+            str(v["type"]), {"id": "Misconfigured"}
+        )
         modes = []
         for mode in v["fire_mode"]:
             modes.append(json_data["items"]["weapons"]["fire_modes"][str(mode)])
@@ -108,11 +118,10 @@ def expand_json():
             traits.append(json_data["items"]["weapons"]["traits"][str(trait)])
         v["traits"] = traits
 
-    # Handle Primary Weapons
+    # Handle Secondary Weapons
     for i, (k, v) in enumerate(json_data["items"]["weapons"]["secondaries"].items()):
         modes = []
         for mode in v["fire_mode"]:
-            print(v["name"], "Mode: ", mode)
             modes.append(json_data["items"]["weapons"]["fire_modes"][str(mode)])
         v["fire_mode"] = modes
         traits = []
@@ -158,6 +167,3 @@ def expand_json():
 get_json_files()
 sort_json_dicts()
 expand_json()
-
-with open("./testing.json", "w", encoding="utf-8") as f:
-    dump(json_data, f, ensure_ascii=False, indent=4)
