@@ -1,9 +1,9 @@
 from fastapi import FastAPI, APIRouter
 from fastapi.requests import Request
 from starlette.middleware.cors import CORSMiddleware
+from brotli_asgi import BrotliMiddleware
 
-
-from src.routes import base, admin, raw
+from src.routes import base, admin, raw, v1
 
 app = FastAPI(
     title="HD2 Community API",
@@ -23,8 +23,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-router = APIRouter()
+app.add_middleware(BrotliMiddleware)
 
 
 @app.middleware("http")
@@ -40,7 +39,7 @@ async def case_sens_middleware(request: Request, call_next):
     return response
 
 
-app.include_router(router)
 app.include_router(base.router)
 app.include_router(admin.router)
 app.include_router(raw.router)
+app.include_router(v1.router)
