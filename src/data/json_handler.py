@@ -164,6 +164,7 @@ def expand_json():
             page.pop("assets")
 
 
+get_jsons_from_github()
 get_json_files()
 sort_json_dicts()
 expand_json()
