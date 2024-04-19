@@ -7,10 +7,10 @@ import src.utils.log as log
 
 api = handler.api
 
-router = APIRouter()
+router = APIRouter(tags=["raw"])
 
 
-@router.get("/all")
+@router.get("/all", include_in_schema=False)
 @router.get("/raw/all", status_code=200)
 async def get_all_raw(request: Request, source: str = ""):
     """
@@ -29,7 +29,7 @@ async def get_all_raw(request: Request, source: str = ""):
     return data
 
 
-@router.get("/raw/planetstats")
+@router.get("/raw/planetstats", include_in_schema=False)
 async def redirect_planetstats():
     return RedirectResponse("/raw/planet_stats")
 

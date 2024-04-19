@@ -8,6 +8,7 @@ from src.utils.authentication import verify_password
 router = APIRouter(
     prefix="/admin",
     tags=["admin"],
+    include_in_schema=True,
     responses={401: {"description": "Unauthorized"}},
 )
 
