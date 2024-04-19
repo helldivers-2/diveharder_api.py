@@ -1,4 +1,4 @@
-FROM python:3.12-alpine
+FROM python:3.11.9-alpine
 
 EXPOSE 1234
 
@@ -6,6 +6,8 @@ WORKDIR /code
 
 COPY ./requirements.txt /code/requirements.txt
 
+RUN apk update
+RUN apk add git
 RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
 
 COPY ./src /code/src
