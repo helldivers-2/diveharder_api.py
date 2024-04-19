@@ -32,7 +32,7 @@ def info(request: Request, response_status: status, user: str = ""):
     else:
         source = user
     logger.info("Source: " + user)
-    logger.info("User-Agent: " + request.headers["User-Agent"])
+    logger.info("User-Agent: " + request.headers.get("User-Agent", "No User-Agent Found")
     logger.info(
         f"[{request.headers.get('fly-client-ip', request.client.host)}] [{request.method} {request.url.path}] [{response_status}] [{source}]"
     )
