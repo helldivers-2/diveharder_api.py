@@ -25,14 +25,16 @@ def update_log_level(log_level):
             logger.setLevel(logging.NOTSET)
 
 
+# user="trainingmanual3"
 def info(request: Request, response_status: status, user: str = ""):
     if user == "" or user is None:
         source = request.headers.get("User-Agent")
     else:
         source = user
-
+    logger.info("Source: " + source)
+    logger.info("User-Agent: " + request.headers["User-Agent"])
     logger.info(
-        f"[{request.headers.get('fly-client-ip', request.client.host)}] [{request.method} {request.url.path}] [{response_status}] [{source}] "
+        f"[{request.headers.get('fly-client-ip', request.client.host)}] [{request.method} {request.url.path}] [{response_status}] [{source}]"
     )
 
 
