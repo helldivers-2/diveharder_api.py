@@ -32,8 +32,10 @@ def info(request: Request, response_status: status, user: str = ""):
         user = "No User"
     else:
         source = user
-    logger.info("Source: " + user)
-    logger.info(
+    logger.debug(
+        "Source: " + request.query_params.get("source", "No Source Param Specified")
+    )
+    logger.debug(
         "User-Agent: " + request.headers.get("User-Agent", "No User-Agent Found")
     )
     logger.info(
