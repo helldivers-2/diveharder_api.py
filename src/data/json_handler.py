@@ -18,9 +18,10 @@ def check_if_json_files_exist():
 
 
 def get_jsons_from_github():
+    path = "./src/data/json"
     if not os.path.exists(path):
         git_url = "https://github.com/helldivers-2/json"
-        path = "./src/data/json"
+
         Repo.clone_from(git_url, path)
 
 
