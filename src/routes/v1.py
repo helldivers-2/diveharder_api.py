@@ -32,6 +32,18 @@ async def update_data():
     return data
 
 
+def get_buy_price_amount(item_id=None, mix_id=None):
+    for item in api.raw_data["items"]["data"]:
+        if (item_id is not None and str(item.get("itemId")) == item_id) or (
+            mix_id is not None and str(item.get("mixId")) == mix_id
+        ):
+            if "buyPrice" in item and len(item["buyPrice"]) > 0:
+                return item["buyPrice"][0]["amount"]  # Assuming only one buy price
+            else:
+                return None  # No buy price available
+    return None  # Item not found
+
+
 async def update_store_data(data):
     store_items = [item["mixId"] for item in data["salesPage"]["sections"][0]["items"]]
     for i, (k, v) in enumerate(helper_data["item_list"].items()):
@@ -43,9 +55,11 @@ async def update_store_data(data):
             store_items[index] = k
     expire_time = strftime("%d-%b-%Y %H:%M", localtime(int(data["expireTime"])))
     items = []
-    for item in store_items:
+    for i, item in enumerate(store_items):
+        print(item)
         if item in json_data["items"]["armor"]:
             items.append(json_data["items"]["armor"][item])
+            items[i]["store_cost"] = get_buy_price_amount(item)
         else:
             items.append({"name": "Unmapped"})
     return {"expire_time": expire_time, "items": items}
