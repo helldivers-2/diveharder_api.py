@@ -56,7 +56,6 @@ async def update_store_data(data):
     expire_time = strftime("%d-%b-%Y %H:%M", localtime(int(data["expireTime"])))
     items = []
     for i, item in enumerate(store_items):
-        print(item)
         if item in json_data["items"]["armor"]:
             items.append(json_data["items"]["armor"][item])
             items[i]["store_cost"] = get_buy_price_amount(item)
