@@ -1,5 +1,6 @@
-from fastapi import FastAPI, APIRouter
+from fastapi import FastAPI
 from fastapi.requests import Request
+
 from starlette.middleware.cors import CORSMiddleware
 from brotli_asgi import BrotliMiddleware
 
