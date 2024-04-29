@@ -2,7 +2,7 @@ from fastapi import APIRouter, status
 from fastapi.requests import Request
 from time import strftime, localtime
 
-from fastapi_simple_rate_limiter import rate_limiter
+# from fastapi_simple_rate_limiter import rate_limiter
 
 from src.data.api import handler
 import src.utils.log as log
@@ -67,7 +67,6 @@ async def update_store_data(data):
 
 
 @router.get("/all")
-@rate_limiter(limit=2, seconds=20)
 async def get_all(request: Request, source: str = ""):
     global formatted_data
     """
@@ -84,7 +83,6 @@ async def get_all(request: Request, source: str = ""):
 
 
 @router.get("/{data_id}")
-@rate_limiter(limit=4, seconds=20)
 async def get_data(request: Request, data_id, source: str = ""):
     log.info(request, status.HTTP_200_OK, source)
     await api.update_all()

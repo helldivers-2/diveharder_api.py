@@ -2,7 +2,7 @@ from fastapi import APIRouter, status, HTTPException
 from fastapi.requests import Request
 from starlette.responses import RedirectResponse
 
-from fastapi_simple_rate_limiter import rate_limiter
+# from fastapi_simple_rate_limiter import rate_limiter
 
 from src.data.api import handler
 import src.utils.log as log
@@ -14,7 +14,6 @@ router = APIRouter(tags=["raw"])
 
 @router.get("/all", include_in_schema=False)
 @router.get("/raw/all", status_code=200)
-@rate_limiter(limit=2, seconds=20)
 async def get_all_raw(request: Request, source: str = ""):
     """
     All AHGS API Calls Only\n
@@ -38,7 +37,6 @@ async def redirect_planetstats():
 
 
 @router.get("/raw/{data_id}", status_code=200)
-@rate_limiter(limit=4, seconds=20)
 async def get_raw(request: Request, data_id: str, source: str = ""):
     """Return api data where id is the key value found in `/raw/all`\n
     Example: `/raw/status` would return the status from `/raw/all`\n
