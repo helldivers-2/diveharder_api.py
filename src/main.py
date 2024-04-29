@@ -1,6 +1,8 @@
 from fastapi import FastAPI
 from fastapi.requests import Request
 
+from prometheus_fastapi_instrumentator import Instrumentator
+
 from starlette.middleware.cors import CORSMiddleware
 from brotli_asgi import BrotliMiddleware
 
@@ -15,6 +17,10 @@ app = FastAPI(
     Discord: chatterchats
     Github: https://github.com/helldivers-2/diveharder_api.py/""",
 )
+
+Instrumentator().instrument(
+    app=app, metric_namespace="diveharder", metric_subsystem="api"
+).expose(app, include_in_schema=False, should_gzip=True)
 
 # noinspection PyTypeChecker
 app.add_middleware(
