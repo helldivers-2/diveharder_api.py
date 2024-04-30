@@ -9,3 +9,4 @@ gunicorn~=21.2.0
 uvicorn~=0.29.0
 brotli-asgi~=1.4.0
 fastapi-simple-rate-limiter~=0.0.4
+prometheus-fastapi-instrumentator~=7.0.0
