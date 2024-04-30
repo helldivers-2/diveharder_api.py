@@ -1,5 +1,4 @@
 from prometheus_fastapi_instrumentator import Instrumentator, metrics
-from src.utils.api_singleton import fast_app as fast_app
 
 # from prometheus_fastapi_instrumentator.metrics import Info
 # from prometheus_client import Counter
@@ -38,8 +37,4 @@ instrumentator.add(
         should_include_method=False,
         metric_namespace="latency",
     )
-)
-
-instrumentator.instrument(app=fast_app).expose(
-    fast_app, include_in_schema=False, should_gzip=True
 )

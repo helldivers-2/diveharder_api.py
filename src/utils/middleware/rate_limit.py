@@ -1,10 +1,8 @@
-from src.utils.api_singleton import fast_app as fast_app
 import src.utils.log as log
 from fastapi.requests import Request
 from fastapi.responses import JSONResponse
 
 
-@fast_app.middleware("http")
 async def cutoff(request: Request, call_next):
     block_list = "Helldivers%20Companion/238 CFNetwork/1494.0.7 Darwin/23.4.0"
     decode_format = "utf-8"
