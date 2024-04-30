@@ -1,4 +1,4 @@
-<img src="https://i.imgur.com/I1wosdV.png" width="55%">
+<img src="https://i.imgur.com/I1wosdV.png" width="55%" alt="HD2 Community API">
 
 [![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)](https://www.python.org/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-005571?style=for-the-badge&logo=fastapi)](https://fastapi.tiangolo.com/)[![Python Black](https://img.shields.io/badge/Python%20Black-000000?style=for-the-badge&logo=python&logoColor=FFFFFF&labelColor=000000&color=000000)](https://github.com/psf/black)
@@ -34,7 +34,7 @@ This can be renamed to .env and used as is, and it will use api.diveharder.com<b
 Or you may change the links to the AHGS API endpoints if you have them.
 
 SECURITY_TOKEN is what you use to access the /admin/* endpoints <br />
-SESSION_TOKEN is for accessing AHGS API's that require authentication
+SESSION_TOKEN is for accessing AHGS APIs that require authentication
 </details>
 
 <details>

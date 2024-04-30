@@ -1,11 +1,19 @@
-from fastapi import FastAPI, APIRouter
-from fastapi.requests import Request
+from fastapi import FastAPI
+from starlette.middleware.base import BaseHTTPMiddleware
+
+# Middleware Improts
 from starlette.middleware.cors import CORSMiddleware
 from brotli_asgi import BrotliMiddleware
+from src.utils.middleware.case_sens_middleware import case_sens_middleware
+from src.utils.middleware.rate_limit import cutoff
+from src.utils.middleware.metrics import instrumentator
+from src.utils.middleware.authentication import authenticate
 
+# Routes Import
 from src.routes import base, admin, raw, v1
 
-app = FastAPI(
+# -------- INIT API -------- #
+app: FastAPI = FastAPI(
     title="HD2 Community API",
     openapi_url="/openapi.json",
     description="""
@@ -15,7 +23,7 @@ app = FastAPI(
     Github: https://github.com/helldivers-2/diveharder_api.py/""",
 )
 
-# noinspection PyTypeChecker
+# -------- MIDDLEWARE -------- #
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -24,21 +32,14 @@ app.add_middleware(
     allow_headers=["*"],
 )
 app.add_middleware(BrotliMiddleware)
+app.add_middleware(BaseHTTPMiddleware, dispatch=case_sens_middleware)
+app.add_middleware(BaseHTTPMiddleware, dispatch=cutoff)
+app.add_middleware(BaseHTTPMiddleware, dispatch=authenticate)
+instrumentator.instrument(app=app).expose(
+    app, include_in_schema=False, should_gzip=True
+)
 
-
-@app.middleware("http")
-async def case_sens_middleware(request: Request, call_next):
-    decode_format = "utf-8"
-    raw_query_str = request.scope["query_string"].decode(decode_format).lower()
-    request.scope["query_string"] = raw_query_str.encode(decode_format)
-
-    path = request.scope["path"].lower()
-    request.scope["path"] = path
-
-    response = await call_next(request)
-    return response
-
-
+# -------- ROUTES -------- #
 app.include_router(base.router)
 app.include_router(admin.router)
 app.include_router(raw.router)

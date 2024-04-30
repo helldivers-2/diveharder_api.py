@@ -25,7 +25,6 @@ def update_log_level(log_level):
             logger.setLevel(logging.NOTSET)
 
 
-# user="trainingmanual3"
 def info(request: Request, response_status: status, user: str = ""):
     if user == "" or user is None:
         source = request.headers.get("User-Agent")
