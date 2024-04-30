@@ -2,8 +2,6 @@ from fastapi import APIRouter, status
 from fastapi.requests import Request
 from time import strftime, localtime
 
-# from fastapi_simple_rate_limiter import rate_limiter
-
 from src.data.api import handler
 import src.utils.log as log
 from src.data.json_handler import json_data, helper_data

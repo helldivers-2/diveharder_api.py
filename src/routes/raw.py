@@ -2,8 +2,6 @@ from fastapi import APIRouter, status, HTTPException
 from fastapi.requests import Request
 from starlette.responses import RedirectResponse
 
-# from fastapi_simple_rate_limiter import rate_limiter
-
 from src.data.api import handler
 import src.utils.log as log
 
