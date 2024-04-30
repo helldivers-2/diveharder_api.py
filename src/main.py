@@ -7,6 +7,7 @@ from brotli_asgi import BrotliMiddleware
 from src.utils.middleware.case_sens_middleware import case_sens_middleware
 from src.utils.middleware.rate_limit import cutoff
 from src.utils.middleware.metrics import instrumentator
+from src.utils.middleware.authentication import authenticate
 
 # Routes Import
 from src.routes import base, admin, raw, v1
@@ -33,6 +34,7 @@ app.add_middleware(
 app.add_middleware(BrotliMiddleware)
 app.add_middleware(BaseHTTPMiddleware, dispatch=case_sens_middleware)
 app.add_middleware(BaseHTTPMiddleware, dispatch=cutoff)
+app.add_middleware(BaseHTTPMiddleware, dispatch=authenticate)
 instrumentator.instrument(app=app).expose(
     app, include_in_schema=False, should_gzip=True
 )
