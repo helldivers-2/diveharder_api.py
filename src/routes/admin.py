@@ -3,7 +3,7 @@ from fastapi.requests import Request
 
 import src.utils.log as log
 from src.cfg.settings import ahgs_api as api_cfg
-from src.utils.authentication import verify_password
+from src.utils.middleware.authentication import verify_password
 
 router = APIRouter(
     prefix="/admin",
