@@ -1,14 +1,15 @@
 import src.utils.log as log
 from fastapi.requests import Request
 from fastapi.responses import JSONResponse
+import re
 
 
 async def cutoff(request: Request, call_next):
-    block_list = "Helldivers%20Companion/238 CFNetwork/1494.0.7 Darwin/23.4.0"
+    regex_pattern = r"Helldivers%20Companion.*CFNetwork.*Darwin"
+
     decode_format = "utf-8"
     raw_query_str = request.headers.get("User-Agent", "")
-    if block_list == raw_query_str:
-        log.info(request, 429, block_list)
+    if re.search(regex_pattern, raw_query_str):
         response = JSONResponse(
             status_code=429,
             content={
