@@ -10,7 +10,7 @@ from src.utils.middleware.metrics import instrumentator
 from src.utils.middleware.authentication import authenticate
 
 # Routes Import
-from src.routes import base, admin, raw, v1
+from src.routes import base, admin, raw, v1, webhook_in
 
 # -------- INIT API -------- #
 app: FastAPI = FastAPI(
@@ -44,3 +44,6 @@ app.include_router(base.router)
 app.include_router(admin.router)
 app.include_router(raw.router)
 app.include_router(v1.router)
+
+# -------- WEBHOOK -------- #
+app.include_router(webhook_in.router)
