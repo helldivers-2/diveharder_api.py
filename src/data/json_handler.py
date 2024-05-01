@@ -1,7 +1,8 @@
 # from git import Repo
 import os
 from json import load
-from git import Repo
+import src.utils.log as log
+import git
 
 
 raw_json_data = {}
@@ -9,20 +10,16 @@ json_data = {}
 helper_data = {}
 
 
-def check_if_json_files_exist():
-    path = "./src/data/json"
-    if os.path.exists(path):
-        directory = os.listdir("./src/data/json")
-        return len(directory) == 0
-    return False
-
-
 def get_jsons_from_github():
     path = "./src/data/json"
+    git_url = "https://github.com/helldivers-2/json"
     if not os.path.exists(path):
-        git_url = "https://github.com/helldivers-2/json"
-
-        Repo.clone_from(git_url, path)
+        log.msg("Clone JSON Repository")
+        git.Repo.clone_from(git_url, path)
+    else:
+        log.msg("Pull JSON Repository")
+        repo = git.Repo(path)
+        repo.remotes.origin.pull()
 
 
 def get_json_files():
@@ -168,7 +165,12 @@ def expand_json():
             page.pop("assets")
 
 
-get_jsons_from_github()
-get_json_files()
-sort_json_dicts()
-expand_json()
+def update_json(check_files: bool = True):
+    log.msg("Init / Update JSON")
+    get_jsons_from_github()
+    get_json_files()
+    sort_json_dicts()
+    expand_json()
+
+
+update_json()
