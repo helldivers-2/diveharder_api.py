@@ -8,9 +8,9 @@ router = APIRouter(include_in_schema=False)
 
 
 @router.get("/")
-async def root(request: Request, source: str = None):
+async def root(request: Request):
     # Base level route. Useful for health checks.
-    log.info(request, status.HTTP_200_OK, source)
+    log.info(request, status.HTTP_200_OK)
     return {
         "msg": "You made it, Helldiver! Sit, and have a drink!",
         "raw_data": "https://api.diveharder.com/raw/all",

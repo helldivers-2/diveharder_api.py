@@ -12,8 +12,8 @@ router = APIRouter(
 
 
 @router.get("/settings")
-async def settings(request: Request, source: str = None):
-    log.info(request, status.HTTP_200_OK, source)
+async def settings(request: Request):
+    log.info(request, status.HTTP_200_OK)
     return {
         "log_level": log.logger.level,
         "session_token": api_cfg["auth_headers"].get("Authorization", ""),
@@ -21,30 +21,30 @@ async def settings(request: Request, source: str = None):
 
 
 @router.post("/session")
-async def settings(request: Request, source: str = None):
+async def settings(request: Request):
     request_json = await request.json()
     token = request_json["token"]
     if token:
         api_cfg["auth_headers"]["Authorization"] = f"{token}"
-        log.info(request, status.HTTP_202_ACCEPTED, source)
+        log.info(request, status.HTTP_202_ACCEPTED)
         raise HTTPException(status_code=status.HTTP_202_ACCEPTED)
     else:
-        log.info(request, status.HTTP_400_BAD_REQUEST, source)
+        log.info(request, status.HTTP_400_BAD_REQUEST)
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST, detail="Did not provide token"
         )
 
 
 @router.post("/loglevel")
-async def settings(request: Request, source: str = None):
+async def settings(request: Request):
     request_json = await request.json()
     loglevel_in = request_json["loglevel"]
     if loglevel_in:
         log.update_log_level(log_level="loglevel_in")
-        log.info(request, status.HTTP_202_ACCEPTED, source)
+        log.info(request, status.HTTP_202_ACCEPTED)
         raise HTTPException(status_code=status.HTTP_202_ACCEPTED)
     else:
-        log.info(request, status.HTTP_400_BAD_REQUEST, source)
+        log.info(request, status.HTTP_400_BAD_REQUEST)
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST, detail="Did not provide token"
         )
