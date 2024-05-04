@@ -41,7 +41,8 @@ class Webhook:
 async def github_webhook(request: Request, response: Response):
     headers = request.headers
     payload = await request.body()
-    json_payload = json.loads(payload)
+    if payload:
+        json_payload = json.loads(payload)
     try:
         wh = Webhook(security["token"])
         msg = wh.github_verify(payload, headers)
