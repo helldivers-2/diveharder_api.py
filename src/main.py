@@ -5,7 +5,7 @@ from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.middleware.cors import CORSMiddleware
 from brotli_asgi import BrotliMiddleware
 from src.utils.middleware.case_sens_middleware import case_sens_middleware
-from src.utils.middleware.rate_limit import cutoff
+from src.utils.middleware.rate_limit import rate_limit
 from src.utils.middleware.metrics import instrumentator
 from src.utils.middleware.authentication import authenticate
 
@@ -31,14 +31,13 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-app.add_middleware(BrotliMiddleware)
+app.add_middleware(BrotliMiddleware, minimum_size=500)
 app.add_middleware(BaseHTTPMiddleware, dispatch=case_sens_middleware)
-app.add_middleware(BaseHTTPMiddleware, dispatch=cutoff)
 app.add_middleware(BaseHTTPMiddleware, dispatch=authenticate)
 instrumentator.instrument(app=app).expose(
     app, include_in_schema=False, should_gzip=True
 )
-
+app.add_middleware(BaseHTTPMiddleware, dispatch=rate_limit)
 # -------- ROUTES -------- #
 app.include_router(base.router)
 app.include_router(admin.router)
