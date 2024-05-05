@@ -64,5 +64,9 @@ def debug(message: Optional[str]):
     logger.debug(msg="[" + str(message) + "]")
 
 
+def exception(message: Optional[str]):
+    logger.exception(msg="[" + str(message) + "]")
+
+
 def critical(message: Optional[str]):
     logger.critical(msg="[" + str(message) + "]")
