@@ -31,8 +31,9 @@ def info(request: Request, response_status: status, user: str = ""):
         user = "No User"
     else:
         source = user
-    super_client = "x-super-client" in request.headers.keys()
-    super_contact = "x-super-contact" in request.headers.keys()
+    client = request.headers.get("x-super-client", False)
+    client_type = "Super-Client" if client else "Client"
+    super_contact = request.headers.get("x-super-contact", False)
     logger.debug(
         "Source: " + request.query_params.get("source", "No Source Param Specified")
     )
@@ -40,7 +41,7 @@ def info(request: Request, response_status: status, user: str = ""):
         "User-Agent: " + request.headers.get("User-Agent", "No User-Agent Found")
     )
     logger.info(
-        f"[{request.headers.get('fly-client-ip', request.client.host)}] [{request.method} {request.url.path}] [{response_status}] [{source}] [Super Client: {super_client}] [Super Contact: {super_contact}]"
+        f"[{request.headers.get('fly-client-ip', request.client.host)}] [{request.method} {request.url.path}] [{response_status}] [{client}] [Super Contact: {super_contact}]"
     )
 
 
