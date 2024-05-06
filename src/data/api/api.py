@@ -150,24 +150,21 @@ class API:
             news["contents"] = sub(r"\[h1](.*?)\[/h1]", r"\n# \1", news["contents"])
             news["contents"] = sub(r"\[h2](.*?)\[/h2]", r"\n## \1", news["contents"])
             news["contents"] = sub(r"\[h3](.*?)\[/h3]", r"\n### \1", news["contents"])
-            news["contents"] = sub(r"\[h3](.*?)\[/h4]", r"\n#### \1", news["contents"])
-            news["contents"] = sub(r"\[h3](.*?)\[/h5]", r"\n##### \1", news["contents"])
+            news["contents"] = sub(r"\[h4](.*?)\[/h4]", r"\n#### \1", news["contents"])
+            news["contents"] = sub(r"\[h5](.*?)\[/h5]", r"\n##### \1", news["contents"])
             news["contents"] = sub(
-                r"\[h3](.*?)\[/h6]", r"\n###### \1", news["contents"]
+                r"\[h6](.*?)\[/h6]", r"\n###### \1", news["contents"]
             )
             news["contents"] = sub(
                 r"\[url=(.+?)](.+?)\[/url]", r"[\2]\(\1\)", news["contents"]
             )
-            news["contents"] = sub(r"\[quote]", r"\n> ", news["contents"])
-            news["contents"] = sub(r"\[/quote]", r"\n", news["contents"])
-            news["contents"] = sub(r"\[b]", r"\n**", news["contents"])
-            news["contents"] = sub(r"\[/b]", r"**", news["contents"])
-            news["contents"] = sub(r"\[i]", r"*", news["contents"])
-            news["contents"] = sub(r"\[/i]", r"*", news["contents"])
-            news["contents"] = sub(r"\[u]", r"\n__", news["contents"])
-            news["contents"] = sub(r"\[/u]", r"__", news["contents"])
-            news["contents"] = sub(r"\[list]", r"", news["contents"])
-            news["contents"] = sub(r"\[/list]", r"", news["contents"])
+            news["contents"] = sub(
+                r"\[quote](.+?)\[/quote]]", r"\n> \1\n", news["contents"]
+            )
+            news["contents"] = sub(r"\[b](.+?)\[/b]", r"\n**\1**", news["contents"])
+            news["contents"] = sub(r"\[i](.+?)\[/i]", r"*\1*", news["contents"])
+            news["contents"] = sub(r"\[u](.+?)\[/u]", r"\n__\1__", news["contents"])
+            news["contents"] = sub(r"\[list](.+?)\[/list]", r"\1", news["contents"])
             news["contents"] = sub(r"\[\*]", r" - ", news["contents"])
             news["contents"] = news["contents"].replace("\n\n", "\n")
         return all_news
