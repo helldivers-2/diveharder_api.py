@@ -68,9 +68,16 @@ class API:
                 self.raw_data[key]["data"] = responses[i]
                 self.raw_data[key]["update_time"] = int(time())
                 if key == "updates":
-                    self.raw_data[key]["data"] = await self.format_steam_news(
-                        self.raw_data[key]["data"]["appnews"]["newsitems"]
-                    )
+                    if (
+                        self.raw_data[key]["data"]
+                        .get("appnews", {})
+                        .get("newsitems", {})
+                    ):
+                        # If pulling from steam, we gotta format, otherwise you're probably using my shit, so it's already formatted
+                        # and we just leave it alone
+                        self.raw_data[key]["data"] = await self.format_steam_news(
+                            self.raw_data[key]["data"]["appnews"]["newsitems"]
+                        )
             self.update_time = int(time())
 
     async def fetch_all(self):
