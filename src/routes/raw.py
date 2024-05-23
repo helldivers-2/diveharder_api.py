@@ -39,6 +39,7 @@ async def get_all_raw(request: Request):
         "season_pass_sv",
         "season_pass_ce",
         "season_pass_dd",
+        "season_pass_pp",
         "minigame_leaderboard",
         "player_leaderboard",
         "commend_leaderboard",
