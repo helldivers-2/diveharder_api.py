@@ -66,40 +66,12 @@ async def get_raw_status(request: Request):
     )
 
 
-@router.get("/status/{data_id}", status_code=200)
-async def get_raw_status_sub_route(request: Request, data_id: str):
-    """Get specific data within status. For example /status/planetStatus would get you
-    just the planet status property of status, instead of all of status."""
-    log.info(request, status.HTTP_200_OK)
-    await api.fetch_data(info_name="status")
-    data = api.raw_data.get("status", {}).get("data", {}).get(data_id, {})
-    if data:
-        return data
-    return JSONResponse(
-        status_code=status.HTTP_204_NO_CONTENT, content={"204": "No Content"}
-    )
-
-
 @router.get("/war_info", status_code=200)
 async def get_raw_war_info(request: Request):
     """Get the raw data for war_info"""
     log.info(request, status.HTTP_200_OK)
     await api.fetch_data(info_name="war_info")
     data = api.raw_data.get("war_info", {}).get("data")
-    if data:
-        return data
-    return JSONResponse(
-        status_code=status.HTTP_204_NO_CONTENT, content={"204": "No Content"}
-    )
-
-
-@router.get("/war_info/{data_id}", status_code=200)
-async def get_raw_war_info_sub_route(request: Request, data_id: str):
-    """Get specific data within war_info. For example /status/planetStatus would get you
-    just the planet status property of status, instead of all of status."""
-    log.info(request, status.HTTP_200_OK)
-    await api.fetch_data(info_name="war_info")
-    data = api.raw_data.get("war_info", {}).get("data", {}).get(data_id, {})
     if data:
         return data
     return JSONResponse(
@@ -121,14 +93,12 @@ async def get_raw_planet_stats(request: Request):
     )
 
 
-@router.get("/planetstats/{data_id}", include_in_schema=False)
-@router.get("/planet_stats/{data_id}", status_code=200)
-async def get_raw_planet_stats_sub_route(request: Request, data_id: str):
-    """Get specific data within planet_stats. For example /status/planetStatus would get you
-    just the planet status property of status, instead of all of status."""
+@router.get("/major_order", status_code=200)
+async def get_raw_major_order(request: Request):
+    """Get the raw data for major_order"""
     log.info(request, status.HTTP_200_OK)
-    await api.fetch_data(info_name="planet_stats")
-    data = api.raw_data.get("planet_stats", {}).get("data", {}).get(data_id, {})
+    await api.fetch_data(info_name="major_order")
+    data = api.raw_data.get("major_order", {}).get("data")
     if data:
         return data
     return JSONResponse(
@@ -136,12 +106,12 @@ async def get_raw_planet_stats_sub_route(request: Request, data_id: str):
     )
 
 
-@router.get("/major_order", status_code=200)
+@router.get("/personal_order", status_code=200)
 async def get_raw_major_order(request: Request):
-    """Get the raw data for major_order"""
+    """Get the raw data for personal_order"""
     log.info(request, status.HTTP_200_OK)
-    await api.fetch_data(info_name="major_order")
-    data = api.raw_data.get("major_order", {}).get("data")
+    await api.fetch_data(info_name="personal_order")
+    data = api.raw_data.get("personal_order", {}).get("data")
     if data:
         return data
     return JSONResponse(
@@ -227,40 +197,12 @@ async def get_raw_mission_rewards(request: Request):
     )
 
 
-@router.get("/mission_rewards/{data_id}", status_code=200)
-async def get_raw_mission_rewards_sub_route(request: Request, data_id: str):
-    """Get specific data within mission_rewards. For example /status/planetStatus would get you
-    just the planet status property of status, instead of all of status."""
-    log.info(request, status.HTTP_200_OK)
-    await api.fetch_data(info_name="mission_rewards")
-    data = api.raw_data.get("mission_rewards", {}).get("data", {}).get(data_id, {})
-    if data:
-        return data
-    return JSONResponse(
-        status_code=status.HTTP_204_NO_CONTENT, content={"204": "No Content"}
-    )
-
-
 @router.get("/store_rotation", status_code=200)
 async def get_raw_store_rotation(request: Request):
     """Get the raw data for store_rotation"""
     log.info(request, status.HTTP_200_OK)
     await api.fetch_data(info_name="store_rotation")
     data = api.raw_data.get("store_rotation", {}).get("data")
-    if data:
-        return data
-    return JSONResponse(
-        status_code=status.HTTP_204_NO_CONTENT, content={"204": "No Content"}
-    )
-
-
-@router.get("/store_rotation/{data_id}", status_code=200)
-async def get_raw_store_rotation_sub_route(request: Request, data_id: str):
-    """Get specific data within store_rotation. For example /status/planetStatus would get you
-    just the planet status property of status, instead of all of status."""
-    log.info(request, status.HTTP_200_OK)
-    await api.fetch_data(info_name="store_rotation")
-    data = api.raw_data.get("store_rotation", {}).get("data", {}).get(data_id, {})
     if data:
         return data
     return JSONResponse(
@@ -281,40 +223,12 @@ async def get_raw_season_pass(request: Request):
     )
 
 
-@router.get("/season_pass/{data_id}", status_code=200)
-async def get_raw_season_pass_sub_route(request: Request, data_id: str):
-    """Get specific data within season_pass. For example /status/planetStatus would get you
-    just the planet status property of status, instead of all of status."""
-    log.info(request, status.HTTP_200_OK)
-    await api.fetch_data(info_name="season_pass")
-    data = api.raw_data.get("season_pass", {}).get("data", {}).get(data_id, {})
-    if data:
-        return data
-    return JSONResponse(
-        status_code=status.HTTP_204_NO_CONTENT, content={"204": "No Content"}
-    )
-
-
 @router.get("/season_pass_hm", status_code=200)
 async def get_raw_season_pass_hm(request: Request):
     """Get the raw data for season_pass_hm"""
     log.info(request, status.HTTP_200_OK)
     await api.fetch_data(info_name="season_pass_hm")
     data = api.raw_data.get("season_pass_hm", {}).get("data")
-    if data:
-        return data
-    return JSONResponse(
-        status_code=status.HTTP_204_NO_CONTENT, content={"204": "No Content"}
-    )
-
-
-@router.get("/season_pass_hm/{data_id}", status_code=200)
-async def get_raw_season_pass_hm_sub_route(request: Request, data_id: str):
-    """Get specific data within season_pass_hm. For example /status/planetStatus would get you
-    just the planet status property of status, instead of all of status."""
-    log.info(request, status.HTTP_200_OK)
-    await api.fetch_data(info_name="season_pass_hm")
-    data = api.raw_data.get("season_pass_hm", {}).get("data", {}).get(data_id, {})
     if data:
         return data
     return JSONResponse(
@@ -335,40 +249,12 @@ async def get_raw_season_pass_sv(request: Request):
     )
 
 
-@router.get("/season_pass_sv/{data_id}", status_code=200)
-async def get_raw_season_pass_sv_sub_route(request: Request, data_id: str):
-    """Get specific data within season_pass_sv. For example /status/planetStatus would get you
-    just the planet status property of status, instead of all of status."""
-    log.info(request, status.HTTP_200_OK)
-    await api.fetch_data(info_name="season_pass_sv")
-    data = api.raw_data.get("season_pass_sv", {}).get("data", {}).get(data_id, {})
-    if data:
-        return data
-    return JSONResponse(
-        status_code=status.HTTP_204_NO_CONTENT, content={"204": "No Content"}
-    )
-
-
 @router.get("/season_pass_ce", status_code=200)
 async def get_raw_season_pass_ce(request: Request):
     """Get the raw data for season_pass_ce"""
     log.info(request, status.HTTP_200_OK)
     await api.fetch_data(info_name="season_pass_ce")
     data = api.raw_data.get("season_pass_ce", {}).get("data")
-    if data:
-        return data
-    return JSONResponse(
-        status_code=status.HTTP_204_NO_CONTENT, content={"204": "No Content"}
-    )
-
-
-@router.get("/season_pass_ce/{data_id}", status_code=200)
-async def get_raw_season_pass_ce_sub_route(request: Request, data_id: str):
-    """Get specific data within season_pass_ce. For example /status/planetStatus would get you
-    just the planet status property of status, instead of all of status."""
-    log.info(request, status.HTTP_200_OK)
-    await api.fetch_data(info_name="season_pass_ce")
-    data = api.raw_data.get("season_pass_ce", {}).get("data", {}).get(data_id, {})
     if data:
         return data
     return JSONResponse(
@@ -389,40 +275,12 @@ async def get_raw_season_pass_dd(request: Request):
     )
 
 
-@router.get("/season_pass_dd/{data_id}", status_code=200)
-async def get_raw_season_pass_dd_sub_route(request: Request, data_id: str):
-    """Get specific data within season_pass_dd. For example /status/planetStatus would get you
-    just the planet status property of status, instead of all of status."""
-    log.info(request, status.HTTP_200_OK)
-    await api.fetch_data(info_name="season_pass_dd")
-    data = api.raw_data.get("season_pass_dd", {}).get("data", {}).get(data_id, {})
-    if data:
-        return data
-    return JSONResponse(
-        status_code=status.HTTP_204_NO_CONTENT, content={"204": "No Content"}
-    )
-
-
 @router.get("/score_calc", status_code=200)
 async def get_raw_score_calc(request: Request):
     """Get the raw data for score_calc"""
     log.info(request, status.HTTP_200_OK)
     await api.fetch_data(info_name="score_calc")
     data = api.raw_data.get("score_calc", {}).get("data")
-    if data:
-        return data
-    return JSONResponse(
-        status_code=status.HTTP_204_NO_CONTENT, content={"204": "No Content"}
-    )
-
-
-@router.get("/score_calc/{data_id}", status_code=200)
-async def get_raw_score_calc_sub_route(request: Request, data_id: str):
-    """Get specific data within score_calc. For example /status/planetStatus would get you
-    just the planet status property of status, instead of all of status."""
-    log.info(request, status.HTTP_200_OK)
-    await api.fetch_data(info_name="score_calc")
-    data = api.raw_data.get("score_calc", {}).get("data", {}).get(data_id, {})
     if data:
         return data
     return JSONResponse(
@@ -495,20 +353,6 @@ async def get_raw_player_leaderboard(request: Request):
     )
 
 
-@router.get("/player_leaderboard/{data_id}", status_code=200)
-async def get_raw_player_leaderboard_sub_route(request: Request, data_id: str):
-    """Get specific data within player_leaderboard. For example /status/planetStatus would get you
-    just the planet status property of status, instead of all of status."""
-    log.info(request, status.HTTP_200_OK)
-    await api.fetch_data(info_name="player_leaderboard")
-    data = api.raw_data.get("player_leaderboard", {}).get("data", {}).get(data_id, {})
-    if data:
-        return data
-    return JSONResponse(
-        status_code=status.HTTP_204_NO_CONTENT, content={"204": "No Content"}
-    )
-
-
 @router.get("/commend_leaderboard", status_code=200)
 async def get_raw_commend_leaderboard(request: Request):
     """Get the raw data for commend_leaderboard"""
@@ -522,40 +366,12 @@ async def get_raw_commend_leaderboard(request: Request):
     )
 
 
-@router.get("/commend_leaderboard/{data_id}", status_code=200)
-async def get_raw_commend_leaderboard_sub_route(request: Request, data_id: str):
-    """Get specific data within commend_leaderboard. For example /status/planetStatus would get you
-    just the planet status property of status, instead of all of status."""
-    log.info(request, status.HTTP_200_OK)
-    await api.fetch_data(info_name="commend_leaderboard")
-    data = api.raw_data.get("commend_leaderboard", {}).get("data", {}).get(data_id, {})
-    if data:
-        return data
-    return JSONResponse(
-        status_code=status.HTTP_204_NO_CONTENT, content={"204": "No Content"}
-    )
-
-
 @router.get("/clan_leaderboard", status_code=200)
 async def get_raw_clan_leaderboard(request: Request):
     """Get the raw data for clan_leaderboard"""
     log.info(request, status.HTTP_200_OK)
     await api.fetch_data(info_name="clan_leaderboard")
     data = api.raw_data.get("clan_leaderboard", {}).get("data")
-    if data:
-        return data
-    return JSONResponse(
-        status_code=status.HTTP_204_NO_CONTENT, content={"204": "No Content"}
-    )
-
-
-@router.get("/clan_leaderboard/{data_id}", status_code=200)
-async def get_raw_clan_leaderboard_sub_route(request: Request, data_id: str):
-    """Get specific data within clan_leaderboard. For example /status/planetStatus would get you
-    just the planet status property of status, instead of all of status."""
-    log.info(request, status.HTTP_200_OK)
-    await api.fetch_data(info_name="clan_leaderboard")
-    data = api.raw_data.get("clan_leaderboard", {}).get("data", {}).get(data_id, {})
     if data:
         return data
     return JSONResponse(

@@ -16,10 +16,10 @@ def get_jsons_from_github():
     if not os.path.exists(path):
         log.msg("Clone JSON Repository")
         git.Repo.clone_from(git_url, path)
-    else:
+    """else:
         log.msg("Pull JSON Repository")
         repo = git.Repo(path)
-        repo.remotes.origin.pull()
+        repo.remotes.origin.pull()"""
 
 
 def get_json_files():
@@ -70,6 +70,7 @@ def sort_json_dicts():
             "steeled_veterans": raw_json_data["warbonds_steeled_veterans"],
             "cutting_edge": raw_json_data["warbonds_cutting_edge"],
             "democratic_detonation": raw_json_data["warbonds_democratic_detonation"],
+            "polar_patriots": raw_json_data["warbonds_polar_patriots"],
         },
         "factions": raw_json_data["factions"],
     }
