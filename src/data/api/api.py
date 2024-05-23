@@ -166,7 +166,8 @@ class API:
             news["contents"] = sub(r"\[b](.+?)\[/b]", r"\n**\1**", news["contents"])
             news["contents"] = sub(r"\[i](.+?)\[/i]", r"*\1*", news["contents"])
             news["contents"] = sub(r"\[u](.+?)\[/u]", r"\n__\1__", news["contents"])
-            news["contents"] = sub(r"\[list](.+?)\[\/list]", r"\1", news["contents"])
-            news["contents"] = sub(r"\[\*]", r" - ", news["contents"])
+            news["contents"] = sub(r"\[list]", r"", news["contents"])
+            news["contents"] = sub(r"\[/list]", r"", news["contents"])
+            news["contents"] = sub(r"\[\*]", r"- ", news["contents"])
             news["contents"] = news["contents"].replace("\n\n", "\n")
         return all_news
