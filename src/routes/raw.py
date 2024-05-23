@@ -275,6 +275,19 @@ async def get_raw_season_pass_dd(request: Request):
     )
 
 
+@router.get("/season_pass_pp", status_code=200)
+async def get_raw_season_pass_pp(request: Request):
+    """Get the raw data for season_pass_pp"""
+    log.info(request, status.HTTP_200_OK)
+    await api.fetch_data(info_name="season_pass_pp")
+    data = api.raw_data.get("season_pass_pp", {}).get("data")
+    if data:
+        return data
+    return JSONResponse(
+        status_code=status.HTTP_204_NO_CONTENT, content={"204": "No Content"}
+    )
+
+
 @router.get("/score_calc", status_code=200)
 async def get_raw_score_calc(request: Request):
     """Get the raw data for score_calc"""
