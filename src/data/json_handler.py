@@ -71,6 +71,8 @@ def sort_json_dicts():
             "cutting_edge": raw_json_data["warbonds_cutting_edge"],
             "democratic_detonation": raw_json_data["warbonds_democratic_detonation"],
             "polar_patriots": raw_json_data["warbonds_polar_patriots"],
+            "viper_commandos": raw_json_data["warbonds_viper_commandos"],
+            "freedoms_flame": raw_json_data["warbonds_freedoms_flame"],
         },
         "factions": raw_json_data["factions"],
     }
@@ -161,7 +163,7 @@ def expand_json():
                     page["assets"][item_id].update(
                         json_data["items"]["weapons"]["grenades"][item_id]
                     )
-                page["assets"][item_id].update({"medal_cost": item["medal_cost"]})
+                page["assets"][item_id].update({"medal_cost": item.get("medal_cost", 0)})
             page["items"] = page["assets"]
             page.pop("assets")
 

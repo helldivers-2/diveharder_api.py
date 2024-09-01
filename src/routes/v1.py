@@ -403,14 +403,12 @@ async def update_store_data(data):
         for item in data.get("salesPage", {}).get("sections", [{}])[0].get("items", {})
     ]
     store_items = []
-
     for k, v in helper_data["item_list"].items():
-        if (v["mix_id"] not in raw_store_items and k not in raw_store_items) or (
-            v["mix_id"] in store_items or k in store_items
-        ):
+        if (
+            v["mix_id"] not in raw_store_items and k not in raw_store_items
+        ):  # or (v["mix_id"] in store_items or k in store_items):
             continue
         elif v["mix_id"] in raw_store_items or k in raw_store_items:
-            print("Item ID", k, "Mix ID", v["mix_id"])
             if k in json_data["items"]["armor"]:
                 store_items.append(k)
 
@@ -424,4 +422,11 @@ async def update_store_data(data):
             items.append(item_data)
         else:
             items.append({"name": "Unmapped"})
+    if not items:
+        items: List[dict[str, str]] = [
+            {"name": "Unmapped"},
+            {"name": "Unmapped"},
+            {"name": "Unmapped"},
+            {"name": "Unmapped"},
+        ]
     return {"expire_time": expire_time, "items": items}

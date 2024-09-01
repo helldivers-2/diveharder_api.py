@@ -56,6 +56,11 @@ class GlobalEvent(BaseModel):
     planetIndices: List[int] | None
 
 
+class PlanetActiveEffects(BaseModel):
+    index: int
+    galacticEffectId: int
+
+
 class StatusResponse(BaseModel):
     warId: int
     time: int
@@ -67,7 +72,7 @@ class StatusResponse(BaseModel):
     communityTargets: List[int] | None
     jointOperations: List[JointOperation]
     planetEvents: List[PlanetEvent]
-    planetActiveEffects: List[int] | None
+    planetActiveEffects: List[PlanetActiveEffects] | None
     activeElectionPolicyEffects: List[int] | None
     globalEvents: list[GlobalEvent]
     superEarthWarResults: List[int] | None

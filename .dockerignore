@@ -1,5 +1,4 @@
 .idea/
-
 .github/
 .venv/
 !env/.env.example

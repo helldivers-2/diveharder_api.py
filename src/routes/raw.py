@@ -108,7 +108,7 @@ async def get_raw_major_order(request: Request):
 
 
 @router.get("/personal_order", status_code=200)
-async def get_raw_major_order(request: Request):
+async def get_raw_personal_order(request: Request):
     """Get the raw data for personal_order"""
     log.info(request, status.HTTP_200_OK)
     await api.fetch_data(info_name="personal_order")

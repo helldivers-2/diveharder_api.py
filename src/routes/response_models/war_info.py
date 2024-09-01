@@ -3,8 +3,8 @@ from typing import List, Any
 
 
 class PlanetCoords(BaseModel):
-    x: int
-    y: int
+    x: float
+    y: float
 
 
 class PlanetInfo(BaseModel):

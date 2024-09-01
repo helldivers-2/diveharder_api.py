@@ -22,7 +22,7 @@ ahgs_api = {
         "User-Agent": "Diveharder API - api.diverharder.com",
         "Authorization": os.environ["SESSION_TOKEN"],
     },
-    "time_delay": 20,
+    "time_delay": int(20),
 }
 
 
@@ -51,6 +51,7 @@ urls = {
     "season_pass_ce": base_url + os.environ["SEASON_PASS_CE"],
     "season_pass_dd": base_url + os.environ["SEASON_PASS_DD"],
     "season_pass_pp": base_url + os.environ["SEASON_PASS_PP"],
+    "season_pass_ff": base_url + os.environ["SEASON_PASS_FF"],
     "score_calc": base_url + os.environ["MISSION_SCORE_CALC_PARAMS"],
     "election_candidates": base_url + os.environ["ELECTION_CANDIDATES"],
     "election_terms": base_url + os.environ["ELECTION_TERMS"],

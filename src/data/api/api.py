@@ -20,7 +20,7 @@ class API:
         self.urls = cfg.urls
 
         self.update_time = 0
-        self.time_delay = cfg.ahgs_api.get("time_delay")
+        self.time_delay: int = cfg.ahgs_api.get("time_delay", 20)
 
         self.raw_data = {
             "status": {"data": [], "update_time": 0, "auth": True},
@@ -41,6 +41,7 @@ class API:
             "season_pass_ce": {"data": [], "update_time": 0, "auth": True},
             "season_pass_dd": {"data": [], "update_time": 0, "auth": True},
             "season_pass_pp": {"data": [], "update_time": 0, "auth": True},
+            "season_pass_ff": {"data": [], "update_time": 0, "auth": True},
             "score_calc": {"data": [], "update_time": 0, "auth": True},
             "election_candidates": {"data": [], "update_time": 0, "auth": True},
             "election_terms": {"data": [], "update_time": 0, "auth": True},
@@ -99,7 +100,7 @@ class API:
             )
         )
         if update_needed:
-            authed = self.raw_data.get(info_name)["auth"]
+            authed = self.raw_data.get(info_name, {})["auth"]
             url = self.urls[info_name]
             self.raw_data[info_name]["update_time"] = int(time())
             self.raw_data[info_name]["data"] = await self.get_url(url, authed)
