@@ -1,5 +1,6 @@
 from pydantic import BaseModel
-from typing import List
+from typing import List, Optional
+
 
 
 class Task(BaseModel):
@@ -20,7 +21,8 @@ class Setting(BaseModel):
     overrideBrief: str
     taskDescription: str
     tasks: List[Task]
-    reward: Reward
+    reward: Optional[Reward] = None
+    rewards: Optional[List[Reward]] = []
     flags: int
 
 

@@ -73,6 +73,8 @@ def sort_json_dicts():
             "polar_patriots": raw_json_data["warbonds_polar_patriots"],
             "viper_commandos": raw_json_data["warbonds_viper_commandos"],
             "freedoms_flame": raw_json_data["warbonds_freedoms_flame"],
+            "chemical_agents": raw_json_data["warbonds_chemical_agents"],
+            "truth_enforcers": raw_json_data["warbonds_truth_enforcers"],
         },
         "factions": raw_json_data["factions"],
     }

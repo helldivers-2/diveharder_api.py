@@ -40,6 +40,10 @@ async def get_all_raw(request: Request):
         "season_pass_ce",
         "season_pass_dd",
         "season_pass_pp",
+        "season_pass_vc",
+        "season_pass_ff",
+        "season_pass_ca",
+        "season_pass_te",
         "minigame_leaderboard",
         "player_leaderboard",
         "commend_leaderboard",
@@ -386,6 +390,18 @@ async def get_raw_clan_leaderboard(request: Request):
     log.info(request, status.HTTP_200_OK)
     await api.fetch_data(info_name="clan_leaderboard")
     data = api.raw_data.get("clan_leaderboard", {}).get("data")
+    if data:
+        return data
+    return JSONResponse(
+        status_code=status.HTTP_204_NO_CONTENT, content={"204": "No Content"}
+    )
+
+@router.get("/dss", status_code=200)
+async def get_raw_dss(request: Request):
+    """Get the raw data for dss"""
+    log.info(request, status.HTTP_200_OK)
+    await api.fetch_data(info_name="space_station_1")
+    data = api.raw_data.get("space_station_1", {}).get("data")
     if data:
         return data
     return JSONResponse(

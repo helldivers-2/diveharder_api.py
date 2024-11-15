@@ -365,6 +365,11 @@ async def update_data():
         "season_pass_ce",
         "season_pass_dd",
         "season_pass_pp",
+        "season_pass_vc",
+        "season_pass_ff",
+        "season_pass_ca",
+        "season_pass_te",
+        "space_station_1"
     ]
     data = {
         k: v["data"]
@@ -414,19 +419,20 @@ async def update_store_data(data):
 
     items = []
     for item in store_items:
-        if item == "Unmapped":
+
+        if "Unmapped" in item:
             continue
         if item in json_data["items"]["armor"]:
             item_data = json_data["items"]["armor"][item]
             item_data.update({"store_cost": get_buy_price_amount(item)})
             items.append(item_data)
         else:
-            items.append({"name": "Unmapped"})
+            items.append({"name": f"Unmapped: {item}"})
     if not items:
         items: List[dict[str, str]] = [
-            {"name": "Unmapped"},
-            {"name": "Unmapped"},
-            {"name": "Unmapped"},
-            {"name": "Unmapped"},
+            {"name": "Unmapped: NO STORE DATA"},
+            {"name": "Unmapped: NO STORE DATA"},
+            {"name": "Unmapped: NO STORE DATA"},
+            {"name": "Unmapped: NO STORE DATA"},
         ]
     return {"expire_time": expire_time, "items": items}
