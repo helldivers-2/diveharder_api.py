@@ -1,11 +1,26 @@
+# --- STANDARD LIBRARIES --- #
+from time import strftime, localtime
+from typing import List
+
+# --- FASTAPI IMPORTS --- #
 from fastapi import APIRouter, status
 from fastapi.requests import Request
 from fastapi.responses import JSONResponse
-from time import strftime, localtime
 
+# --- DH APP IMPORTS --- #
 from src.data.api import handler
 import src.utils.log as log
 from src.data.json_handler import json_data, helper_data
+
+# --- RESPONSE MODELS --- #
+from src.routes.response_models.status import StatusResponse
+from src.routes.response_models.war_info import WarInfoResponse
+from src.routes.response_models.planet_stats import PlanetStatsResponse
+from src.routes.response_models.major_order import MajorOrderResponse
+from src.routes.response_models.news_feed import NewsFeedResponse
+from src.routes.response_models.updates import UpdateResponse
+from src.routes.response_models.war_id import WarIdResponse
+from src.routes.response_models.items import ItemsResponse
 
 router = APIRouter(prefix="/v1", tags=["v1"], include_in_schema=True)
 
@@ -32,7 +47,7 @@ async def get_all(request: Request):
 
 
 @router.get("/status")
-async def get_v1_status(request: Request):
+async def get_v1_status(request: Request) -> StatusResponse:
     """Get the v1 data for status"""
     log.info(request, status.HTTP_200_OK)
     await api.update_all()
@@ -45,23 +60,8 @@ async def get_v1_status(request: Request):
     )
 
 
-@router.get("/status/{data_id}")
-async def get_v1_status_sub_route(request: Request, data_id: str):
-    """Get specific data within status. For example /status/planetStatus would get you
-    just the planet status property of status, instead of all of status."""
-    log.info(request, status.HTTP_200_OK)
-    await api.update_all()
-    data = await update_data()
-    response = data.get("status", []).get(data_id, [])
-    if response:
-        return response
-    return JSONResponse(
-        status_code=status.HTTP_204_NO_CONTENT, content={"204": "No Content"}
-    )
-
-
 @router.get("/war_info")
-async def get_v1_war_info(request: Request):
+async def get_v1_war_info(request: Request) -> WarInfoResponse:
     """Get the v1 data for war_info"""
     log.info(request, status.HTTP_200_OK)
     await api.update_all()
@@ -74,23 +74,8 @@ async def get_v1_war_info(request: Request):
     )
 
 
-@router.get("/war_info/{data_id}")
-async def get_v1_war_info_sub_route(request: Request, data_id: str):
-    """Get specific data within war_info. For example /status/planetStatus would get you
-    just the planet status property of status, instead of all of status."""
-    log.info(request, status.HTTP_200_OK)
-    await api.update_all()
-    data = await update_data()
-    response = data.get("war_info", []).get(data_id, [])
-    if response:
-        return response
-    return JSONResponse(
-        status_code=status.HTTP_204_NO_CONTENT, content={"204": "No Content"}
-    )
-
-
 @router.get("/planet_stats")
-async def get_v1_planet_stats(request: Request):
+async def get_v1_planet_stats(request: Request) -> PlanetStatsResponse:
     """Get the v1 data for planet_stats"""
     log.info(request, status.HTTP_200_OK)
     await api.update_all()
@@ -103,23 +88,8 @@ async def get_v1_planet_stats(request: Request):
     )
 
 
-@router.get("/planet_stats/{data_id}")
-async def get_v1_planet_stats_sub_route(request: Request, data_id: str):
-    """Get specific data within planet_stats. For example /status/planetStatus would get you
-    just the planet status property of status, instead of all of status."""
-    log.info(request, status.HTTP_200_OK)
-    await api.update_all()
-    data = await update_data()
-    response = data.get("planet_stats", []).get(data_id, [])
-    if response:
-        return response
-    return JSONResponse(
-        status_code=status.HTTP_204_NO_CONTENT, content={"204": "No Content"}
-    )
-
-
 @router.get("/major_order")
-async def get_v1_major_order(request: Request):
+async def get_v1_major_order(request: Request) -> List[MajorOrderResponse]:
     """Get the v1 data for major_order"""
     log.info(request, status.HTTP_200_OK)
     await api.update_all()
@@ -132,8 +102,22 @@ async def get_v1_major_order(request: Request):
     )
 
 
+@router.get("/personal_order")
+async def get_v1_major_order(request: Request) -> List[MajorOrderResponse]:
+    """Get the v1 data for personal_order"""
+    log.info(request, status.HTTP_200_OK)
+    await api.update_all()
+    data = await update_data()
+    response = data.get("personal_order", [])
+    if response:
+        return response
+    return JSONResponse(
+        status_code=status.HTTP_204_NO_CONTENT, content={"204": "No Content"}
+    )
+
+
 @router.get("/news_feed")
-async def get_v1_news_feed(request: Request):
+async def get_v1_news_feed(request: Request) -> List[NewsFeedResponse]:
     """Get the v1 data for news_feed"""
     log.info(request, status.HTTP_200_OK)
     await api.update_all()
@@ -147,7 +131,7 @@ async def get_v1_news_feed(request: Request):
 
 
 @router.get("/updates")
-async def get_v1_updates(request: Request):
+async def get_v1_updates(request: Request) -> List[UpdateResponse]:
     """Get the v1 data for updates"""
     log.info(request, status.HTTP_200_OK)
     await api.update_all()
@@ -161,7 +145,7 @@ async def get_v1_updates(request: Request):
 
 
 @router.get("/war_id")
-async def get_v1_war_id(request: Request):
+async def get_v1_war_id(request: Request) -> WarIdResponse:
     """Get the v1 data for war_id"""
     log.info(request, status.HTTP_200_OK)
     await api.update_all()
@@ -175,7 +159,7 @@ async def get_v1_war_id(request: Request):
 
 
 @router.get("/items")
-async def get_v1_items(request: Request):
+async def get_v1_items(request: Request) -> ItemsResponse:
     """Get the v1 data for items"""
     log.info(request, status.HTTP_200_OK)
     await api.update_all()
@@ -195,21 +179,6 @@ async def get_v1_store_rotation(request: Request):
     await api.update_all()
     data = await update_data()
     response = data.get("store_rotation", [])
-    if response:
-        return response
-    return JSONResponse(
-        status_code=status.HTTP_204_NO_CONTENT, content={"204": "No Content"}
-    )
-
-
-@router.get("/store_rotation/{data_id}")
-async def get_v1_store_rotation_sub_route(request: Request, data_id: str):
-    """Get specific data within store_rotation. For example /status/planetStatus would get you
-    just the planet status property of status, instead of all of status."""
-    log.info(request, status.HTTP_200_OK)
-    await api.update_all()
-    data = await update_data()
-    response = data.get("store_rotation", []).get(data_id, [])
     if response:
         return response
     return JSONResponse(
@@ -273,21 +242,6 @@ async def get_v1_player_leaderboard(request: Request):
     )
 
 
-@router.get("/player_leaderboard/{data_id}")
-async def get_v1_player_leaderboard_sub_route(request: Request, data_id: str):
-    """Get specific data within player_leaderboard. For example /status/planetStatus would get you
-    just the planet status property of status, instead of all of status."""
-    log.info(request, status.HTTP_200_OK)
-    await api.update_all()
-    data = await update_data()
-    response = data.get("player_leaderboard", []).get(data_id, [])
-    if response:
-        return response
-    return JSONResponse(
-        status_code=status.HTTP_204_NO_CONTENT, content={"204": "No Content"}
-    )
-
-
 @router.get("/commend_leaderboard")
 async def get_v1_commend_leaderboard(request: Request):
     """Get the v1 data for commend_leaderboard"""
@@ -302,21 +256,6 @@ async def get_v1_commend_leaderboard(request: Request):
     )
 
 
-@router.get("/commend_leaderboard/{data_id}")
-async def get_v1_commend_leaderboard_sub_route(request: Request, data_id: str):
-    """Get specific data within commend_leaderboard. For example /status/planetStatus would get you
-    just the planet status property of status, instead of all of status."""
-    log.info(request, status.HTTP_200_OK)
-    await api.update_all()
-    data = await update_data()
-    response = data.get("commend_leaderboard", []).get(data_id, [])
-    if response:
-        return response
-    return JSONResponse(
-        status_code=status.HTTP_204_NO_CONTENT, content={"204": "No Content"}
-    )
-
-
 @router.get("/clan_leaderboard")
 async def get_v1_clan_leaderboard(request: Request):
     """Get the v1 data for clan_leaderboard"""
@@ -324,21 +263,6 @@ async def get_v1_clan_leaderboard(request: Request):
     await api.update_all()
     data = await update_data()
     response = data.get("clan_leaderboard", [])
-    if response:
-        return response
-    return JSONResponse(
-        status_code=status.HTTP_204_NO_CONTENT, content={"204": "No Content"}
-    )
-
-
-@router.get("/clan_leaderboard/{data_id}")
-async def get_v1_clan_leaderboard_sub_route(request: Request, data_id: str):
-    """Get specific data within clan_leaderboard. For example /status/planetStatus would get you
-    just the planet status property of status, instead of all of status."""
-    log.info(request, status.HTTP_200_OK)
-    await api.update_all()
-    data = await update_data()
-    response = data.get("clan_leaderboard", []).get(data_id, [])
     if response:
         return response
     return JSONResponse(
@@ -374,21 +298,6 @@ async def get_v1_warbonds(request: Request):
     )
 
 
-@router.get("/warbonds/{data_id}")
-async def get_v1_warbonds_sub_route(request: Request, data_id: str):
-    """Get specific data within warbonds. For example /status/planetStatus would get you
-    just the planet status property of status, instead of all of status."""
-    log.info(request, status.HTTP_200_OK)
-    await api.update_all()
-    data = await update_data()
-    response = data.get("warbonds", []).get(data_id, [])
-    if response:
-        return response
-    return JSONResponse(
-        status_code=status.HTTP_204_NO_CONTENT, content={"204": "No Content"}
-    )
-
-
 @router.get("/factions")
 async def get_v1_factions(request: Request):
     """Get the v1 data for factions"""
@@ -410,21 +319,6 @@ async def get_v1_mission_rewards(request: Request):
     await api.update_all()
     data = await update_data()
     response = data.get("mission_rewards", [])
-    if response:
-        return response
-    return JSONResponse(
-        status_code=status.HTTP_204_NO_CONTENT, content={"204": "No Content"}
-    )
-
-
-@router.get("/mission_rewards/{data_id}")
-async def get_v1_mission_rewards_sub_route(request: Request, data_id: str):
-    """Get specific data within mission_rewards. For example /status/planetStatus would get you
-    just the planet status property of status, instead of all of status."""
-    log.info(request, status.HTTP_200_OK)
-    await api.update_all()
-    data = await update_data()
-    response = data.get("mission_rewards", []).get(data_id, [])
     if response:
         return response
     return JSONResponse(
@@ -460,21 +354,6 @@ async def get_v1_score_calc(request: Request):
     )
 
 
-@router.get("/score_calc/{data_id}")
-async def get_v1_score_calc_sub_route(request: Request, data_id: str):
-    """Get specific data within score_calc. For example /status/planetStatus would get you
-    just the planet status property of status, instead of all of status."""
-    log.info(request, status.HTTP_200_OK)
-    await api.update_all()
-    data = await update_data()
-    response = data.get("score_calc", []).get(data_id, [])
-    if response:
-        return response
-    return JSONResponse(
-        status_code=status.HTTP_204_NO_CONTENT, content={"204": "No Content"}
-    )
-
-
 async def update_data():
     no_include = [
         "mission_rewards",
@@ -485,6 +364,12 @@ async def update_data():
         "season_pass_sv",
         "season_pass_ce",
         "season_pass_dd",
+        "season_pass_pp",
+        "season_pass_vc",
+        "season_pass_ff",
+        "season_pass_ca",
+        "season_pass_te",
+        "space_station_1"
     ]
     data = {
         k: v["data"]
@@ -498,45 +383,55 @@ async def update_data():
     return data
 
 
-def get_buy_price_amount(item_id=None, mix_id=None):
-    item = next(
-        (
-            item
-            for item in api.raw_data.get("items", []).get("data", {})
-            if (item_id is not None and str(item.get("itemId")) == item_id)
-            or (
-                mix_id is not None
-                and str(item.get("mix_id")) is not None
-                and str(mix_id) == mix_id
-            )
-        ),
-        None,
-    )
-    if "buyPrice" in item and len(item["buyPrice"]) > 0:
-        return item["buyPrice"][0]["amount"]  # Assuming only one buy price
+def get_buy_price_amount(item_id=None):
+    super_item = []
+
+    for item in api.raw_data.get("items", {}).get("data", {}):
+        if str(item.get("itemId")) == item_id or str(item.get("mixId")) == item_id:
+            super_item = item
+            break
+
+    if "buyPrice" in super_item and len(super_item["buyPrice"]) > 0:
+        return super_item.get("buyPrice", [{}])[0].get(
+            "amount", 0
+        )  # Assuming only one buy price
     else:
+        log.msg("buyPrice Not Found")
         return None  # No buy price available
 
 
 async def update_store_data(data):
-    expire_time = strftime("%d-%b-%Y %H:%M", localtime(int(data["expireTime"])))
+    expire_time = strftime("%d-%b-%Y %H:%M", localtime(int(data.get("expireTime", 0))))
 
-    store_items = [
-        str(item["mixId"]) for item in data["salesPage"]["sections"][0]["items"]
+    raw_store_items = [
+        str(item["mixId"])
+        for item in data.get("salesPage", {}).get("sections", [{}])[0].get("items", {})
     ]
+    store_items = []
     for k, v in helper_data["item_list"].items():
-        if v["mix_id"] in store_items:
-            index = store_items.index(v["mix_id"])
-            store_items[index] = k
-        elif k in store_items:
-            index = store_items.index(k)
-            store_items[index] = k
+        if (
+            v["mix_id"] not in raw_store_items and k not in raw_store_items
+        ):  # or (v["mix_id"] in store_items or k in store_items):
+            continue
+        elif v["mix_id"] in raw_store_items or k in raw_store_items:
+            if k in json_data["items"]["armor"]:
+                store_items.append(k)
+
     items = []
     for item in store_items:
+        if "Unmapped" in item:
+            continue
         if item in json_data["items"]["armor"]:
             item_data = json_data["items"]["armor"][item]
             item_data.update({"store_cost": get_buy_price_amount(item)})
             items.append(item_data)
         else:
-            items.append({"name": "Unmapped"})
+            items.append({"name": f"Unmapped: {item}"})
+    if not items:
+        items: List[dict[str, str]] = [
+            {"name": "Unmapped: NO STORE DATA"},
+            {"name": "Unmapped: NO STORE DATA"},
+            {"name": "Unmapped: NO STORE DATA"},
+            {"name": "Unmapped: NO STORE DATA"},
+        ]
     return {"expire_time": expire_time, "items": items}

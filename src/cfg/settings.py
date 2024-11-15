@@ -22,7 +22,7 @@ ahgs_api = {
         "User-Agent": "Diveharder API - api.diverharder.com",
         "Authorization": os.environ["SESSION_TOKEN"],
     },
-    "time_delay": 20,
+    "time_delay": int(20),
 }
 
 
@@ -38,6 +38,7 @@ urls = {
     "war_id": war_id_url,
     "planet_stats": base_url + os.environ["PLANET_STATS"],
     "major_order": base_url + os.environ["MAJOR_ORDER"],
+    "personal_order": base_url + os.environ["PERSONAL_ORDER"],
     "news_feed": base_url + os.environ["NEWS_FEED"],
     "updates": os.environ["STEAM_NEWS"],
     "level_spec": base_url + os.environ["LEVEL_SPEC"],
@@ -49,6 +50,12 @@ urls = {
     "season_pass_sv": base_url + os.environ["SEASON_PASS_SV"],
     "season_pass_ce": base_url + os.environ["SEASON_PASS_CE"],
     "season_pass_dd": base_url + os.environ["SEASON_PASS_DD"],
+    "season_pass_pp": base_url + os.environ["SEASON_PASS_PP"],
+    "season_pass_vc": base_url + os.environ["SEASON_PASS_VC"],
+    "season_pass_ff": base_url + os.environ["SEASON_PASS_FF"],
+    "season_pass_ca": base_url + os.environ["SEASON_PASS_CA"],
+    "season_pass_te": base_url + os.environ["SEASON_PASS_TE"],
+    "space_station_1": base_url + os.environ["SPACE_STATION_1"],
     "score_calc": base_url + os.environ["MISSION_SCORE_CALC_PARAMS"],
     "election_candidates": base_url + os.environ["ELECTION_CANDIDATES"],
     "election_terms": base_url + os.environ["ELECTION_TERMS"],

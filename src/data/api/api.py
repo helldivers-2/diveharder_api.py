@@ -20,13 +20,14 @@ class API:
         self.urls = cfg.urls
 
         self.update_time = 0
-        self.time_delay = cfg.ahgs_api.get("time_delay")
+        self.time_delay: int = cfg.ahgs_api.get("time_delay", 20)
 
         self.raw_data = {
             "status": {"data": [], "update_time": 0, "auth": True},
             "war_info": {"data": [], "update_time": 0, "auth": True},
             "planet_stats": {"data": [], "update_time": 0, "auth": True},
             "major_order": {"data": [], "update_time": 0, "auth": True},
+            "personal_order": {"data": [], "update_time": 0, "auth": True},
             "news_feed": {"data": [], "update_time": 0, "auth": True},
             "updates": {"data": [], "update_time": 0, "auth": False},
             "level_spec": {"data": [], "update_time": 0, "auth": True},
@@ -39,6 +40,12 @@ class API:
             "season_pass_sv": {"data": [], "update_time": 0, "auth": True},
             "season_pass_ce": {"data": [], "update_time": 0, "auth": True},
             "season_pass_dd": {"data": [], "update_time": 0, "auth": True},
+            "season_pass_pp": {"data": [], "update_time": 0, "auth": True},
+            "season_pass_vc": {"data": [], "update_time": 0, "auth": True},
+            "season_pass_ff": {"data": [], "update_time": 0, "auth": True},
+            "season_pass_ca": {"data": [], "update_time": 0, "auth": True},
+            "season_pass_te": {"data": [], "update_time": 0, "auth": True},
+            "space_station_1": {"data": [], "update_time": 0, "auth": False},
             "score_calc": {"data": [], "update_time": 0, "auth": True},
             "election_candidates": {"data": [], "update_time": 0, "auth": True},
             "election_terms": {"data": [], "update_time": 0, "auth": True},
@@ -66,9 +73,12 @@ class API:
                 self.raw_data[key]["data"] = responses[i]
                 self.raw_data[key]["update_time"] = int(time())
                 if key == "updates":
-                    self.raw_data[key]["data"] = await self.format_steam_news(
-                        self.raw_data[key]["data"]["appnews"]["newsitems"]
-                    )
+                    if not isinstance(self.raw_data[key]["data"], list):
+                        # If pulling from steam, we gotta format, otherwise you're probably using my shit, so it's already formatted
+                        # and we just leave it alone
+                        self.raw_data[key]["data"] = await self.format_steam_news(
+                            self.raw_data[key]["data"]["appnews"]["newsitems"]
+                        )
             self.update_time = int(time())
 
     async def fetch_all(self):
@@ -94,7 +104,7 @@ class API:
             )
         )
         if update_needed:
-            authed = self.raw_data.get(info_name)["auth"]
+            authed = self.raw_data.get(info_name, {})["auth"]
             url = self.urls[info_name]
             self.raw_data[info_name]["update_time"] = int(time())
             self.raw_data[info_name]["data"] = await self.get_url(url, authed)
@@ -164,7 +174,8 @@ class API:
             news["contents"] = sub(r"\[b](.+?)\[/b]", r"\n**\1**", news["contents"])
             news["contents"] = sub(r"\[i](.+?)\[/i]", r"*\1*", news["contents"])
             news["contents"] = sub(r"\[u](.+?)\[/u]", r"\n__\1__", news["contents"])
-            news["contents"] = sub(r"\[list](.+?)\[/list]", r"\1", news["contents"])
-            news["contents"] = sub(r"\[\*]", r" - ", news["contents"])
+            news["contents"] = sub(r"\[list]", r"", news["contents"])
+            news["contents"] = sub(r"\[/list]", r"", news["contents"])
+            news["contents"] = sub(r"\[\*]", r"- ", news["contents"])
             news["contents"] = news["contents"].replace("\n\n", "\n")
         return all_news
