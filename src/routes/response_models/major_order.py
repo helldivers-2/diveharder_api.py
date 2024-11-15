@@ -2,6 +2,7 @@ from pydantic import BaseModel
 from typing import List, Optional
 
 
+
 class Task(BaseModel):
     type: int
     values: List[int]

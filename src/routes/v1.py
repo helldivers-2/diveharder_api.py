@@ -419,6 +419,7 @@ async def update_store_data(data):
 
     items = []
     for item in store_items:
+
         if "Unmapped" in item:
             continue
         if item in json_data["items"]["armor"]:
